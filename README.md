@@ -139,7 +139,3 @@ Group ? is Awesome!!!
 - The URL of the GitHub repository that contains your code:
 - The URL of your portfolio, with your project added to it:
 - PowerPoint Presentation Document: https://docs.google.com/presentation/d/1zpMDRyQgwQl6RFWtyTntWpweepLJgqp9/edit?usp=share_link&ouid=103431585642431900224&rtpof=true&sd=true
-
-# Project-3
-# Project-3
-# Project-3
