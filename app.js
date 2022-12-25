@@ -6,7 +6,7 @@ const app = express();
 const mongoose = require('mongoose');
 
 
-mongoose.connect('mongodb://bslockhart:<dbpassword>@<Mlab_URL>')
+mongoose.connect('mongodb://bslockhart:project321@<MongoDB URI>')
 
 mongoose.connection.once('open', () => {
     console.log('conneted to database');
