@@ -21,9 +21,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^5.1.0",
-    "bcryptjs": "^2.4.3",
-    "caniuse-lite": "^1.0.30001441",
     "if-env": "^1.0.4"
   },
   "devDependencies": {
