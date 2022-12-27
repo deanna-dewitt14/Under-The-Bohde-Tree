@@ -15,13 +15,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://git.heroku.com/Under-The-Bohde-Tree"
+    "url": "git+https://git.heroku.com/under-the-bohde-tree"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^5.1.0",
     "if-env": "^1.0.4"
   },
   "devDependencies": {
