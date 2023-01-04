@@ -23,15 +23,16 @@ Welcome to our project...
 
 ## Mock Up
 
-Group ? is Awesome!!!
+Group 3 is Awesome!!!
 
 ## Group Members
 
-- Ben Shoenbachler
-- Brian Lockhart
-- Deanna DeWitt
-- Jonathan Gibbings
-- Mike Pergolatti
+- Ash Mustafa (Front End)
+- Ben Shoenbachler (Front End)
+- Brian Lockhart (Back End)
+- Deanna DeWitt (Back End)
+- Jonathan Gibbings (Back End)
+- Mike Pergolatti (Front End)
 
 ## Technologies Used
 
@@ -136,7 +137,7 @@ Group ? is Awesome!!!
 ### Submission
 
 - Date Submitted: 01/11/23
-- The URL of the deployed application:
+- The URL of the deployed application: https://under-the-bohde-tree.herokuapp.com/
 - The URL of the GitHub repository that contains your code: https://github.com/bslockhart/Under-The-Bohde-Tree/tree/Brian
-- The URL of your portfolio, with your project added to it: https://under-the-bohde-tree.herokuapp.com/
+- The URL of your portfolio, with your project added to it: https://github.com/bslockhart/Brians-React-Portfolio
 - PowerPoint Presentation Document: https://docs.google.com/presentation/d/1zpMDRyQgwQl6RFWtyTntWpweepLJgqp9/edit?usp=share_link&ouid=103431585642431900224&rtpof=true&sd=true
