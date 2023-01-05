@@ -9,6 +9,7 @@ import {
   CardColumns,
 } from "react-bootstrap";
 import { useMutation } from "@apollo/react-hooks";
+import Book from './../components/Book/Book'
 
 import Auth from "../utils/auth";
 import { searchGoogleBooks } from "../utils/API";
@@ -121,7 +122,17 @@ const SearchBooks = () => {
             ? `Viewing ${searchedBooks.length} results:`
             : "Search for a book to begin"}
         </h2>
-        <CardColumns>
+        <div className="bookList">
+        {searchedBooks.map((book) => {
+          return (
+            <Book
+              key={book.bookId}
+              book={book}
+            />
+          );
+        })}
+      </div>
+        {/* <CardColumns>
           {searchedBooks.map((book) => {
             return (
               <Card key={book.bookId} border="dark">
@@ -161,7 +172,7 @@ const SearchBooks = () => {
               </Card>
             );
           })}
-        </CardColumns>
+        </CardColumns> */}
       </Container>
     </>
   );
