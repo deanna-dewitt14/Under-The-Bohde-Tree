@@ -12,6 +12,7 @@ const typeDefs = gql`
     saveBook(input: savedBook!): User
     removeBook(bookId: ID!): User
     toggleTradeBool(bookId: ID!): User
+    setRating (bookId: ID!, rating: Int): User
   }
 
   type User {

@@ -70,7 +70,7 @@ const resolvers = {
 
       throw new AuthenticationError("You need to be logged in!");
     },
-        toggleTradeBool: async (parent, args, context) => {
+    toggleTradeBool: async (parent, args, context) => {
       if (context.user) {
         const userData = await User.findOne({ _id: context.user._id })
           .select("-__v -password")
@@ -82,6 +82,29 @@ const resolvers = {
         if (book) {
           book.tradeBool = !book.tradeBool
           await User.updateOne ({ _id: context.user._id },{ savedBooks: savedBooks })
+        }
+
+        return userData;
+      }
+
+      throw new AuthenticationError("You need to be logged in!");
+    },
+    setRating: async (parent, args, context) => {
+      if (context.user) {
+        const userData = await User.findOne({ _id: context.user._id })
+          .select("-__v -password")
+          .populate("books"),
+          savedBooks = userData.savedBooks, 
+          bookId= args.bookId,
+          rating= args.rating,
+          book = savedBooks.find(book => book.bookId === bookId)
+
+        if (book) {
+          book.rating = rating
+          await User.updateOne (
+            { _id: context.user._id },
+            { savedBooks: savedBooks },
+            { runValidators: true })
         }
 
         return userData;
