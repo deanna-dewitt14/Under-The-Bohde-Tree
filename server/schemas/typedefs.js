@@ -11,6 +11,8 @@ const typeDefs = gql`
     addUser(username: String!, email: String!, password: String!): Auth
     saveBook(input: savedBook!): User
     removeBook(bookId: ID!): User
+    toggleTradeBool(bookId: ID!): User
+    setRating (bookId: ID!, rating: Int): User
   }
 
   type User {
@@ -28,6 +30,8 @@ const typeDefs = gql`
     title: String
     image: String
     link: String
+    tradeBool: Boolean
+    rating: Int
   }
 
   input savedBook {
