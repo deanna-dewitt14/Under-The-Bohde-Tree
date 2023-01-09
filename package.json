@@ -5,6 +5,8 @@
   "main": "index.js",
   "dependencies": {
     "@apollo/client": "^3.7.1",
+    "@fortawesome/fontawesome-svg-core": "^6.2.1",
+    "@fortawesome/free-solid-svg-icons": "^6.2.1",
     "@tailwindcss/line-clamp": "^0.4.2",
     "ansi-regex": "^5.0.1",
     "ansi-styles": "^4.3.0",
