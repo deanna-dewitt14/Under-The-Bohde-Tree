@@ -1,63 +1,38 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import {
-  ApolloProvider,
-  ApolloClient,
-  InMemoryCache,
-  createHttpLink,
-} from "@apollo/client";
-import { setContext } from "@apollo/client/link/context";
-// import { useSpring, animated } from "react-spring";
+import { ApolloProvider } from "@apollo/react-hooks";
+import ApolloClient from "apollo-boost";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-// import components
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-
-// import pages
-import Index from "./pages/index";
-import Login from "./pages/Login";
-import Signup from "../src/components/SignupForm";
-import Search from "./pages/Search";
-import Profile from "./pages/Profile";
-import Editprofile from "./pages/Editprofile";
-
-const httpLink = createHttpLink({
-  uri: "/graphql",
-});
-
-const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem("id_token");
-  return {
-    headers: {
-      ...headers,
-      authorization: token ? `Bearer ${token}` : "",
-    },
-  };
-});
+import SearchBooks from "./pages/SearchBooks";
+import SavedBooks from "./pages/SavedBooks";
+import Navbar from "./components/Navbar";
 
 const client = new ApolloClient({
-  link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
+  request: (operation) => {
+    const token = localStorage.getItem("id_token");
+
+    operation.setContext({
+      headers: {
+        authorization: token ? `Bearer ${token}` : "",
+      },
+    });
+  },
+
+  uri: "/graphql",
 });
 
 function App() {
   return (
     <ApolloProvider client={client}>
       <Router>
-        <Header />
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/profile">
-            <Route path=":username" element={<Profile />} />
-            <Route path="" element={<Profile />} />
-          </Route>
-          <Route path="/editprofile" element={<Editprofile />} />
-          <Route path="/logout" element={<logout />} />
-        </Routes>
-        <Footer />
+        <>
+          <Navbar />
+          <Switch>
+            <Route exact path="/" component={SearchBooks} />
+            <Route exact path="/saved" component={SavedBooks} />
+            <Route render={() => <h1 className="display-2">Wrong page!</h1>} />
+          </Switch>
+        </>
       </Router>
     </ApolloProvider>
   );

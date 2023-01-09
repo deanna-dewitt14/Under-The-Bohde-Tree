@@ -1,61 +1,49 @@
-const { gql } = require('apollo-server-express');
+// import the gql tagged template function (they are an advanced use if template literals)
+const { gql } = require("apollo-server-express");
 
 const typeDefs = gql`
-type User {
-    _id: ID
+  type Query {
+    me: User
+  }
+
+  type Mutation {
+    login(email: String!, password: String!): Auth
+    addUser(username: String!, email: String!, password: String!): Auth
+    saveBook(input: savedBook!): User
+    removeBook(bookId: ID!): User
+  }
+
+  type User {
+    _id: ID!
     username: String
     email: String
+    bookCount: Int
     savedBooks: [Book]
-    friendCount: Int
-    comments: [Comment]
-    friends: [User]
-}
-type Book {
-    _id: ID!
-    bookId: String!
-    title: String
-    authors: [String]
-    description: String
-    image: String
-}
-input BookInput {
+  }
+
+  type Book {
     bookId: String
     authors: [String]
     description: String
     title: String
     image: String
-}
-type Comment {
-    _id: ID
-    commentText: String
-    username: String
-    createdAt: String
-    book_id: String
+    link: String
   }
 
-type Query {
-    me: User
-    users: [User]
-    user(username: String!): User
-   comments(username: String): [Comment]
-   comment(_id: ID!): Comment
-    
-}
+  input savedBook {
+    description: String
+    title: String
+    bookId: String
+    image: String
+    link: String
+    authors: [String]
+  }
 
-type Auth {
+  type Auth {
     token: ID!
     user: User
-}
-
-type Mutation {
-    login(email: String!, password: String!): Auth
-    addUser(username: String!, email: String!, password: String!): Auth
-    updateUser(id: ID!, email: String!): User
-    deleteUser(id: ID!): Boolean
-    addComment(commentText: String!, book_id: String!): Comment
-    addFriend(friendId: ID!): User
-    saveBook(input: BookInput!): User
-    removeBook(bookId: String!): User
- }
+  }
 `;
+
+// export the typeDefs
 module.exports = typeDefs;
