@@ -12,8 +12,7 @@ import { removeBookId } from "../utils/localStorage";
 // import components
 import FriendList from "../components/FriendList";
 import RatingStars from "../components/RatingStars";
-import Comments from "../components/Comments";
-import CommentsForm from "../components/CommentsForm";
+
 //import icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInstagram } from "@fortawesome/free-brands-svg-icons";
@@ -31,48 +30,6 @@ const Profile = () => {
     variables: { username: userParam },
   });
   const userData = data?.me || data?.user || {};
-
-  // const { data: userData } = useQuery(QUERY_ME);
-  const comments = userData?.comments || [];
-  // const loggedIn = Auth.loggedIn();
-
-  // book counter
-  const [count, setCount] = useState(0);
-  console.log(count);
-  const increase = () => {
-    setCount((prevCount) => {
-      const newCount = Number(prevCount) + 1;
-      sessionStorage.setItem("count", newCount);
-      return newCount;
-    });
-  };
-
-  useEffect(() => {
-    const initialValue = sessionStorage.getItem("count");
-    if (initialValue) setCount(initialValue);
-  }, []);
-
-  // dropdown menu
-  const options = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
-  // const defaultOption = options[0];
-  const selectedValue = "SelectedValue";
-  const [selected, setSelected] = useState([]);
-  const handleChange = (s) => {
-    sessionStorage.setItem(selectedValue, JSON.stringify(s));
-    setSelected(s);
-  };
-  const handleReset = () => {
-    sessionStorage.setItem("count", 0);
-
-    setCount(0);
-    console.log(count);
-  };
-  React.useEffect(() => {
-    const lastSelected = JSON.parse(
-      sessionStorage.getItem(selectedValue) ?? "[]"
-    );
-    setSelected(lastSelected);
-  }, []);
 
   // remove book functionality
   const [deleteBook] = useMutation(REMOVE_BOOK);

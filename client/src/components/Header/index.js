@@ -1,6 +1,5 @@
 import React from "react";
 import { useSpring, animated } from "react-spring";
-import Sparkle from "react-sparkle";
 import Burger from "../Burger/Burger";
 import { Link } from "react-router-dom";
 import Auth from "../../utils/auth";
@@ -23,7 +22,6 @@ const Header = () => {
       <nav>
         <animated.div style={style1}>
           <div className="mx-8 my-6 flex justify-between items-center">
-       {/* <h1 className="text-6xl">Under the Bodhe Tree</h1> */}
        <img src={logo} className="w-60"></img>
 
             <div>
@@ -71,14 +69,7 @@ const Header = () => {
       {/* GENERATE ANIMAL HEADER */}
       <animated.div style={style1}>
         <div className="mt-0 mb-8 flex flex-col justify-center items-center">
-          <Sparkle
-            // color={'#f9d18f'}
-            count={10}
-            minSize={5}
-            maxSize={15}
-            fadeOutSpeed={20}
-            flickerSpeed={"slowest"}
-          />
+      
         </div>
       </animated.div>
     </header>

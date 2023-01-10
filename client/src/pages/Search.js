@@ -145,43 +145,17 @@ const Search = () => {
 
         {/* SEARCH INPUT */}
         <div className="py-5">
-          <form className="search w-[500px]" onSubmit={handleFormSubmit}>
-            <label for="search" className="sr-only">
-              Search
-            </label>
-
-            <div className="relative">
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <svg
-                  className="h-5 w-5 text-teal-300"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              </div>
-              <input
-                name="search"
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                type="text"
-                className="block w-full rounded-md bg-slate-900 border border-slate-600 text-gray-200 placeholder-slate-500 mt-2 mb-4 py-2 pl-10 pr-3 text-sm focus:border-indigo-500 focus:text-gray-200 focus:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-2xl"
-                placeholder="Search"
-              ></input>
+        <form className="flex justify-center" onSubmit={handleFormSubmit}>
+          <div className="mb-3 xl:w-96">
+            <div className="input-group relative flex gap-2 items-stretch w-full mb-4">
+              <input type="search" class="form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" placeholder="Search" aria-label="Search" aria-describedby="button-addon3" />
+              <button type="button" className="border-2 px-2 rounded"id="button-addon3">Search</button>
             </div>
-          </form>
+          </div>
+        </form>
 
           {/* END SEARCH INPUT */}
 
-          <AnchorLink className="flex justify-center" href="#Feed">
-            Follow The White Rabbit!
-          </AnchorLink>
         </div>
 
         {/* LAYOUT BREAK - HORIZONTAL LINE */}
@@ -229,20 +203,10 @@ const Search = () => {
                           (savedBookId) => savedBookId === book.bookId
                         ) ? (
                           <div className="inline-flex items-center">
-                            <HiStar
-                              size={25}
-                              style={{ color: "#f9d18f" }}
-                              className="mr-1"
-                            />{" "}
                             Saved
                           </div>
                         ) : (
                           <div className="inline-flex items-center">
-                            <HiOutlineStar
-                              size={25}
-                              style={{ color: "#f9d18f" }}
-                              className="mr-1"
-                            />{" "}
                             Save Book
                           </div>
                         )}
@@ -267,12 +231,33 @@ const Search = () => {
                           </div>
                         ) : (
                           <div className="inline-flex items-center">
-                            <HiOutlineStar
+
+                            Add to Wishlist
+                          </div>
+                        )}
+                      </button>
+                      <button
+                        className="rounded-md border border-indigo-300 bg-[#22274f] px-4 py-2 text-sm font-medium shadow-md inline-flex items-center"
+                        disabled={savedBookIds?.some(
+                          (savedBookId) => savedBookId === book.bookId
+                        )}
+                        onClick={() => handleWishlist(book.bookId)}
+                      >
+                        {savedBookIds?.some(
+                          (savedBookId) => savedBookId === book.bookId
+                        ) ? (
+                          <div className="inline-flex items-center">
+                            <HiStar
                               size={25}
                               style={{ color: "#f9d18f" }}
                               className="mr-1"
                             />{" "}
-                            Add to Wishlist
+                            Available to Trade
+                          </div>
+                        ) : (
+                          <div className="inline-flex items-center">
+
+                            Available to Trade
                           </div>
                         )}
                       </button>

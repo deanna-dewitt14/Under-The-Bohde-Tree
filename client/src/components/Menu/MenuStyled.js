@@ -19,8 +19,7 @@ const MenuStyled = ({ open }) => {
 					aria-labelledby="options-menu"
 				>
 					<div className="rounded-lg pb-3 pt-3">
-						{/* {Auth.loggedIn() ? (
-							<> */}
+				
 								<a
 									href="/search"
 									className="block px-4 py-2 text-lg leading-5 font-semibold hover:bg-[#22274f] hover:pl-8"

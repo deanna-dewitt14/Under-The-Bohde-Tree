@@ -8,19 +8,11 @@ const RatingStars = () => {
     setRating(rate);
     
   };
-  const onPointerEnter = () => console.log("Enter");
-  const onPointerLeave = () => console.log("Leave");
-  const onPointerMove = () => console.log();
-
-
 
   return (
     <div className="inline-flex">
       <Rating
         onClick={handleRating}
-        onPointerEnter={onPointerEnter}
-        onPointerLeave={onPointerLeave}
-        onPointerMove={onPointerMove}
       />
     </div>
   );
