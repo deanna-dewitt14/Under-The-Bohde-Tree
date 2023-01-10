@@ -7,9 +7,9 @@ const resolvers = {
     me: async (parent, args, context) => {
       if (context.user) {
         const userData = await User.findOne({ _id: context.user._id })
-        .select("-__v -password")
-        .populate('friends')
-        .populate('comments');
+          .select("-__v -password")
+          .populate("friends")
+          .populate("comments");
         console.log(userData);
         return userData;
       }
@@ -19,31 +19,39 @@ const resolvers = {
     users: async () => {
       return User.find()
         .select("-__v -password")
-        .populate('friends')
-        .populate('comments');
+        .populate("friends")
+        .populate("comments");
     },
     // GET a user by username
     user: async (parent, { username }) => {
       return User.findOne({ username })
         .select("-__v -password")
-        .populate('friends')
-        .populate('comments');
+        .populate("friends")
+        .populate("comments");
     },
     comments: async (parent, { username }) => {
       const params = username ? { username } : {};
       const comments = await Comment.find(params).sort({ createdAt: -1 });
       console.log(comments);
-      return comments
+      return comments;
     },
     comment: async (parent, { _id }) => {
       return Comment.findOne({ _id });
+    },
+    getUserTrade: async (parent, { bookId }) => {
+      return User.find({ "savedBooks.bookId": bookId }).select(
+        "-__v -password"
+      );
+    },
+    getUserWish: async (parent, { bookId }) => {
+      return User.find({ "wishList.bookId": bookId }).select("-__v -password");
     },
   },
   Mutation: {
     addUser: async (parent, args) => {
       const user = await User.create(args);
       const token = signToken(user);
-      return { token, user};
+      return { token, user };
     },
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
@@ -59,7 +67,6 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
-
     updateUser: async (parent, { id, email }) => {
       const user = await User.findOneAndUpdate(
         { _id: id },
@@ -69,7 +76,6 @@ const resolvers = {
 
       return user;
     },
-
     addComment: async (parent, args, context) => {
       if (context.user) {
         const comment = await Comment.create({
@@ -88,7 +94,6 @@ const resolvers = {
 
       throw new AuthenticationError("You need to be logged in!");
     },
-
     addFriend: async (parent, { friendId }, context) => {
       if (context.user) {
         const updatedUser = await User.findOneAndUpdate(
@@ -102,9 +107,8 @@ const resolvers = {
 
       throw new AuthenticationError("You need to be logged in!");
     },
-
     saveBook: async (parent, args, context) => {
-      console.log("saveBook")
+      console.log("saveBook");
       if (context.user) {
         const updateUser = await User.findByIdAndUpdate(
           { _id: context.user._id },
@@ -115,19 +119,63 @@ const resolvers = {
       }
       throw new AuthenticationError("You need to be logged in!");
     },
-
     removeBook: async (parent, { bookId }, context) => {
-      console.log(context.user, bookId)
+      console.log(context.user, bookId);
       if (context.user) {
         const updateSavedBooks = await User.findOneAndUpdate(
-        
           { _id: context.user._id },
           { $pull: { savedBooks: { bookId } } },
           { new: true }
         );
-        console.log(updateSavedBooks)
+        console.log(updateSavedBooks);
         return updateSavedBooks;
       }
+      throw new AuthenticationError("You need to be logged in!");
+    },
+    toggleTradeBool: async (parent, args, context) => {
+      if (context.user) {
+        const userData = await User.findOne({ _id: context.user._id })
+            .select("-__v -password")
+            .populate("books"),
+          savedBooks = userData.savedBooks,
+          bookId = args.bookId,
+          book = savedBooks.find((book) => book.bookId === bookId);
+
+        if (book) {
+          book.tradeBool = !book.tradeBool;
+          await User.updateOne(
+            { _id: context.user._id },
+            { savedBooks: savedBooks }
+          );
+        }
+
+        return userData;
+      }
+
+      throw new AuthenticationError("You need to be logged in!");
+    },
+    setRating: async (parent, args, context) => {
+      if (context.user) {
+        const userData = await User.findOne({ _id: context.user._id })
+            .select("-__v -password")
+            .populate("books"),
+          savedBooks = userData.savedBooks,
+          bookId = args.bookId,
+          rating = args.rating,
+          book = savedBooks.find((book) => book.bookId === bookId);
+
+        if (book) {
+          book.rating = rating;
+          await User.updateOne(
+            { _id: context.user._id },
+            { savedBooks: savedBooks },
+            { runValidators: true }
+          );
+        }
+
+        return userData;
+      }
+
       throw new AuthenticationError("You need to be logged in!");
     },
   },
