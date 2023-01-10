@@ -7,11 +7,10 @@ import RatingStars from "../components/RatingStars";
 import { useMutation, useQuery } from "@apollo/client";
 import { googleBookSearch } from "../utils/API";
 import Auth from "../utils/auth";
-import { SAVE_BOOK } from "../utils/mutations";
+import { SAVE_BOOK, SAVE_WISHLIST } from "../utils/mutations";
 import { saveBookIds, getSavedBookIds } from "../utils/localStorage";
 import { QUERY_ME_BASIC } from "../utils/queries";
 // import icons & images
-import StarsImg from "../images/stars.png";
 import { HiOutlineStar, HiStar } from "react-icons/hi";
 
 const Search = () => {
@@ -19,6 +18,7 @@ const Search = () => {
   const [searchInput, setSearchInput] = useState("");
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
   const [saveBook] = useMutation(SAVE_BOOK);
+  const [saveBookToWishlist] = useMutation(SAVE_WISHLIST);
   const { loading, data } = useQuery(QUERY_ME_BASIC);
   // const { data: userData } = useQuery(QUERY_ME_BASIC);
   // const comments = data?.comments || [];
@@ -112,6 +112,27 @@ const Search = () => {
       console.error(err);
     }
   };
+  //function to save book to db
+  const handleWishlist = async (bookId) => {
+    const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
+    console.log({ bookToSave });
+
+    const token = Auth.loggedIn() ? Auth.getToken() : null;
+
+    if (!token) {
+      return false;
+    }
+
+    try {
+      await saveBookToWishlist({
+        variables: { input: { ...bookToSave } },
+      });
+
+      setSavedBookIds([...savedBookIds, bookToSave.bookId]);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <>
@@ -164,10 +185,7 @@ const Search = () => {
         </div>
 
         {/* LAYOUT BREAK - HORIZONTAL LINE */}
-        <div className="w-1/3 my-4 inline-flex justify-center items-center">
-          <img src={StarsImg} alt="stars" />
-          <img src={StarsImg} alt="stars" />
-        </div>
+   
       </div>
 
       {/* GOOGLE BOOKS API */}
@@ -198,7 +216,7 @@ const Search = () => {
                     </p>
 
                     {/* SAVE BOOK BUTTON */}
-                    <div className="mt-4 flex items-center justify-end">
+                    <div className="mt-4 flex items-center gap-2 justify-end">
                       {/* {Auth.loggedIn() && ( */}
                       <button
                         className="rounded-md border border-indigo-300 bg-[#22274f] px-4 py-2 text-sm font-medium shadow-md inline-flex items-center"
@@ -229,6 +247,35 @@ const Search = () => {
                           </div>
                         )}
                       </button>
+                      <button
+                        className="rounded-md border border-indigo-300 bg-[#22274f] px-4 py-2 text-sm font-medium shadow-md inline-flex items-center"
+                        disabled={savedBookIds?.some(
+                          (savedBookId) => savedBookId === book.bookId
+                        )}
+                        onClick={() => handleWishlist(book.bookId)}
+                      >
+                        {savedBookIds?.some(
+                          (savedBookId) => savedBookId === book.bookId
+                        ) ? (
+                          <div className="inline-flex items-center">
+                            <HiStar
+                              size={25}
+                              style={{ color: "#f9d18f" }}
+                              className="mr-1"
+                            />{" "}
+                            Saved to Wishlist
+                          </div>
+                        ) : (
+                          <div className="inline-flex items-center">
+                            <HiOutlineStar
+                              size={25}
+                              style={{ color: "#f9d18f" }}
+                              className="mr-1"
+                            />{" "}
+                            Add to Wishlist
+                          </div>
+                        )}
+                      </button>
                       {/* )} */}
                     </div>
 
@@ -242,91 +289,7 @@ const Search = () => {
       </div>
       {/* END GOOGLE BOOKS API */}
 
-      <div id="Feed"></div>
-      <div className="relative bg-transparent px-4 pt-10 sm:px-6 lg:px-8 pb-10">
-        <div className="absolute inset-0">
-          <div className="h-1/3 bg-transparent sm:h-2/3" />
-        </div>
-        <div className="relative mx-auto max-w-7xl">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-              Main Feed
-            </h2>
-
-            <div className="p-2"></div>
-          </div>
-          <div className="p-5 bg-slate-900 rounded-lg">
-            <ul className="divide-y divide-gray-200">
-              <li className="py-4">
-                <div className="flex space-x-3">
-                  <img
-                    className="h-6 w-6 rounded-full"
-                    src="https://i.imgur.com/bqERVhW.png"
-                    alt=""
-                  ></img>{" "}
-                  <div className="flex-1 space-y-1">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-medium">Ash Mustafa</h3>
-                    </div>
-                    <p className="text-sm text-gray-500">
-                      Commented on MERN Stack Development
-                    </p>
-                  </div>
-                  <div className="ml-2 flex flex-shrink-0">
-                    <button className="rounded-full hover:text-slate-900 bg-slate-800 border-indigo-500/50 border-2 px-2 text-sm hover:font-semibold leading-5 text-indigo-300">
-                      Add Friend
-                    </button>
-                  </div>
-                </div>
-              </li>
-              <li className="py-4">
-                <div className="flex space-x-3">
-                  <img
-                    className="h-6 w-6 rounded-full"
-                    src="https://i.imgur.com/BLbkrmg.png"
-                    alt=""
-                  ></img>{" "}
-                  <div className="flex-1 space-y-1">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-medium">Deanna DeWitt</h3>
-                    </div>
-                    <p className="text-sm text-gray-500">
-                      Commented on JavaScript 101
-                    </p>
-                  </div>
-                  <div className="ml-2 flex flex-shrink-0">
-                    <button className="rounded-full hover:text-slate-900 bg-slate-800 border-indigo-500/50 border-2 px-2 text-sm hover:font-semibold leading-5 text-indigo-300">
-                      Add Friend
-                    </button>
-                  </div>
-                </div>
-              </li>
-              <li className="py-4">
-                <div className="flex space-x-3">
-                  <img
-                    className="h-6 w-6 rounded-full"
-                    src="https://i.imgur.com/F65UyAc.png"
-                    alt=""
-                  ></img>{" "}
-                  <div className="flex-1 space-y-1">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-medium">Dusty Arnold</h3>
-                    </div>
-                    <p className="text-sm text-gray-500">
-                      Commented on BootCamp for Students
-                    </p>
-                  </div>
-                  <div className="ml-2 flex flex-shrink-0">
-                    <button className="rounded-full hover:text-slate-900 bg-slate-800 border-indigo-500/50 border-2 px-2 text-sm hover:font-semibold leading-5 text-indigo-300">
-                      Add Friend
-                    </button>
-                  </div>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
+      
     </>
   );
 };
