@@ -1,4 +1,4 @@
-const { gql } = require('apollo-server-express');
+const { gql } = require("apollo-server-express");
 
 const typeDefs = gql`
   type Query {
@@ -11,7 +11,7 @@ const typeDefs = gql`
     saveBook(input: savedBook!): User
     removeBook(bookId: ID!): User
     toggleTradeBool(bookId: ID!): User
-    setRating (bookId: ID!, rating: Int): User
+    setRating(bookId: ID!, rating: Int): User
   }
 
   type User {
@@ -22,8 +22,8 @@ const typeDefs = gql`
     friendCount: Int
     comments: [Comment]
     friends: [User]
-}
-type Book {
+  }
+  type Book {
     _id: ID!
     bookId: String!
     title: String
@@ -35,12 +35,12 @@ type Book {
     rating: Int
   }
 
-input savedBook {
+  input savedBook {
     description: String
     title: String
     image: String
-}
-type Comment {
+  }
+  type Comment {
     _id: ID
     commentText: String
     username: String
@@ -48,21 +48,20 @@ type Comment {
     book_id: String
   }
 
-type Query {
+  type Query {
     me: User
     users: [User]
     user(username: String!): User
-   comments(username: String): [Comment]
-   comment(_id: ID!): Comment
-    
-}
+    comments(username: String): [Comment]
+    comment(_id: ID!): Comment
+  }
 
-type Auth {
+  type Auth {
     token: ID!
     user: User
-}
+  }
 
-type Mutation {
+  type Mutation {
     login(email: String!, password: String!): Auth
     addUser(username: String!, email: String!, password: String!): Auth
     updateUser(id: ID!, email: String!): User
@@ -71,6 +70,6 @@ type Mutation {
     addFriend(friendId: ID!): User
     saveBook(input: BookInput!): User
     removeBook(bookId: String!): User
- }
+  }
 `;
 module.exports = typeDefs;

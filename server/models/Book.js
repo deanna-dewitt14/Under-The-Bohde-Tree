@@ -1,4 +1,4 @@
-const { Schema } = require('mongoose');
+const { Schema } = require("mongoose");
 
 const bookSchema = new Schema({
   authors: [
@@ -10,14 +10,12 @@ const bookSchema = new Schema({
     type: String,
     required: true,
   },
+  //saved from googlebooks
   bookId: {
     type: String,
     required: true,
   },
   image: {
-    type: String,
-  },
-  link: {
     type: String,
   },
   title: {
@@ -30,7 +28,7 @@ const bookSchema = new Schema({
   },
   rating: {
     type: Number,
-    min: 1, 
+    min: 1,
     max: 5,
   },
 });
