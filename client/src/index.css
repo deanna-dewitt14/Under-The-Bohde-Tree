@@ -6,7 +6,6 @@
 
 @layer base {
   body {
-    @apply bg-stars;
     @apply bg-repeat-x;
     @apply bg-top;
     @apply z-[-1];

@@ -3,3 +3,4 @@ public
 .cache
 .vscode
 .DS_Store
+.env

@@ -92,6 +92,24 @@ const Profile = () => {
     }
   };
 
+  //add to wishlist
+  const handleAddToWishlist = async (bookId) => {
+    console.log(bookId);
+    const token = Auth.loggedIn() ? Auth.getToken() : null;
+    if (!token) {
+      return false;
+    }
+    try {
+      await deleteBook({
+        variables: { bookId },
+      });
+
+      removeBookId(bookId);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   // add friend functionality
   const handleClick = async () => {
     try {
@@ -183,85 +201,12 @@ const Profile = () => {
 
         <div className="mx-auto mt-8 grid max-w-3xl grid-cols-1 gap-6 sm:px-6 lg:max-w-7xl lg:grid-flow-col-dense lg:grid-cols-3">
           <div className="space-y-6 lg:col-span-2 lg:col-start-1">
+            
             <section>
-              <div className="bg-slate-900 px-4 py-5 shadow-lg sm:rounded-lg sm:px-6">
-                <div className="text-center pb-8 font-['poppins'] text-2xl font-medium text-indigo-400 inline-flex w-full justify-center items-center">
-                  Your goal is
-                  <Dropdown
-                    className="w-[60px] bg-slate-700 mx-4"
-                    options={options}
-                    onChange={handleChange}
-                    value={selected?.value}
-                    isMulti
-                    placeholder="0"
-                  />
-                  books read!
-                </div>
-
-                <p className="text-center text-xlfont-medium">
-                  You are currently at...
-                </p>
-                <section>
-                  <div className="mt-6 flow-root">
-                    <h2 className="animate-pulse text-center text-8xl text-yellow-200 font-semibold">
-                      {count}
-                    </h2>
-                  </div>
-                  <div className="justify-center mt-6 flex grid-cols-2">
-                    <button
-                      type="button"
-                      onClick={increase}
-                      value={count}
-                      className="cursor-pointer inline-flex items-center justify-center rounded-md border bg-[#22274f] px-4 py-2 text-sm font-medium text-indigo-200 shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke-width="1.5"
-                        stroke="currentColor"
-                        className="w-6 h-6"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M15 11.25l-3-3m0 0l-3 3m3-3v7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                      <p className="pl-2">Add to count</p>
-                    </button>
-                    <div className="p-2"></div>
-                    <button
-                      type="button"
-                      onClick={handleReset}
-                      disabled={count === 0}
-                      className="cursor-pointer inline-flex items-center justify-center rounded-md border px-4 py-2 text-sm font-medium text-indigo-200 shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke-width="1.5"
-                        stroke="currentColor"
-                        className="w-6 h-6"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
-                        />
-                      </svg>
-
-                      <p className="pl-2">Reset</p>
-                    </button>
-                  </div>
-                </section>
-              </div>
-              <div className="py-2"></div>
-
+              
               <div className="mt-8 px-4 sm:px-6">
                 <h2 className="text-4xl text-indigo-300 font-medium drop-shadow">
-                  Reading List
+                  Library
                 </h2>
               </div>
               <div className="bg-slate-900 shadow-lg sm:rounded-lg mt-8">
@@ -274,21 +219,34 @@ const Profile = () => {
                           <li>
                             <div className="block hover:bg-slate-800">
                               <div className="px-4 py-2 sm:px-6">
-                                <div className="flex items-center justify-between">
-                                  <p className="truncate font-medium">
-                                    {book.title}
-                                  </p>
+                                <div className="flex gap-2 justify-between">
+                                  <img
+                                  className="rounded"
+                                    alt={`cover of ${book.title}`}
+                                    src={book.image}
+                                  />
+                                  <div>
+                                  <h2 className="font-medium ">{book.title}</h2>
                                   <div>
                                     <RatingStars />
                                   </div>
-                                  <div className="ml-2 flex flex-shrink-0">
+                                  </div>
+                                  <div className="ml-2 flex flex-col justify-evenly">
                                     <button
-                                      className="inline-flex rounded-full hover:text-slate-900 bg-rose-900 text-rose-300 px-2 text-sm hover:font-semibold leading-5>"
+                                      className="inline-flex justify-center rounded font-bold py-2 px-4 rounded-full>"
                                       onClick={() =>
                                         handleDeleteBook(book.bookId)
                                       }
                                     >
                                       Remove
+                                    </button>
+                                    <button
+                                      className="inline-flex rounded font-bold py-2 px-4 rounded-full>"
+                                      onClick={() =>
+                                        handleAddToWishlist(book.bookId)
+                                      }
+                                    >
+                                      Add to Wishlist
                                     </button>
                                   </div>
                                 </div>
@@ -298,25 +256,257 @@ const Profile = () => {
                         </ul>
                       </div>
                       <div className="p-2"></div>
-                      <div className="overflow-hidden bg-slate-800 shadow sm:rounded-md">
+                      
+
+                      <Menu
+                        as="div"
+                        className="relative inline-block text-left"
+                      >
+                        <div>
+                          {/* <Menu.Button className="cursor-pointer inline-flex items-center justify-center rounded-md border border-indigo-200 px-4 py-2 text-sm font-medium text-indigo-200 shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100">
+														Comment
+													</Menu.Button> */}
+                        </div>
+
+                        <Transition
+                          as={Fragment}
+                          enter="transition ease-out duration-100"
+                          enterFrom="transform opacity-0 scale-95"
+                          enterTo="transform opacity-100 scale-100"
+                          leave="transition ease-in duration-75"
+                          leaveFrom="transform opacity-100 scale-100"
+                          leaveTo="transform opacity-0 scale-95"
+                        >
+                          <Menu.Items className="rounded-xl absolute left-0 z-10 mt-2 w-56 origin-top-right bg-slate-700 p-4 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                            <div className="py-1">
+                              <Menu.Item>
+                                {({ active }) => (
+                                  <textarea
+                                    id="message"
+                                    className={classNames(
+                                      active
+                                        ? "bg-slate-900 text-gray-100"
+                                        : "text-gray-100",
+                                      "block px-4 text-sm bg-slate-900"
+                                    )}
+                                  >
+                                    Write your comment here
+                                  </textarea>
+                                )}
+                              </Menu.Item>
+
+                              <Menu.Item>
+                                {({ active }) => (
+                                  <div className="pt-2">
+                                    <a
+                                      href
+                                      className={classNames(
+                                        active
+                                          ? "bg-slate-900 cursor-pointer inline-flex items-center justify-center rounded-md border border-indigo-200 px-4 py-2 text-sm font-medium text-indigo-200 shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100"
+                                          : "bg-slate-900 cursor-pointer inline-flex items-center justify-center rounded-md border border-indigo-200 px-4 py-2 text-sm font-medium text-indigo-200 shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100",
+                                        "bg-slate-900 cursor-pointer inline-flex items-center justify-center rounded-md border border-indigo-200 px-4 py-2 text-sm font-medium text-indigo-200 shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100"
+                                      )}
+                                    >
+                                      Submit your comment
+                                    </a>
+                                  </div>
+                                )}
+                              </Menu.Item>
+                            </div>
+                          </Menu.Items>
+                        </Transition>
+                      </Menu>
+                    </>
+                  ))}
+                  <a
+                    href="/search"
+                    className="cursor-pointer block bg-[#090c26] hover:bg-slate-800 px-4 py-4 text-center font-medium sm:rounded-b-lg"
+                  >
+                    Add to list
+                  </a>
+                </div>
+              </div>
+            </section>
+            <section>
+              
+              <div className="mt-8 px-4 sm:px-6">
+                <h2 className="text-4xl text-indigo-300 font-medium drop-shadow">
+                  Wishlist
+                </h2>
+              </div>
+              <div className="bg-slate-900 shadow-lg sm:rounded-lg mt-8">
+                <div className="px-4 py-5 sm:px-6">
+                  {" "}
+                  {userData?.savedBooks?.map((book) => (
+                    <>
+                      <div className="overflow-hidden bg-[#22274f] shadow sm:rounded-md">
                         <ul className="divide-y divide-gray-700">
                           <li>
-                            <div className="px-4 py-2 sm:px-6 flex items-center justify-between ml-2 flex-shrink-0 text-sm text-gray-400">
-                              <Comments
-                                comments={comments.filter((cmt) => {
-                                  console.log(cmt);
-
-                                  return cmt.book_id === book.bookId;
-                                })}
-                              />
-                              {/* <Comments comments={comments} /> */}
-                            </div>
-                            <div className="px-8 pb-5">
-                              <CommentsForm book_id={book.bookId} />
+                            <div className="block hover:bg-slate-800">
+                              <div className="px-4 py-2 sm:px-6">
+                                <div className="flex gap-2 justify-between">
+                                  <img
+                                  className="rounded"
+                                    alt={`cover of ${book.title}`}
+                                    src={book.image}
+                                  />
+                                  <div>
+                                  <h2 className="font-medium ">{book.title}</h2>
+                                  <div>
+                                    <RatingStars />
+                                  </div>
+                                  </div>
+                                  <div className="ml-2 flex flex-col justify-evenly">
+                                    <button
+                                      className="inline-flex justify-center rounded font-bold py-2 px-4 rounded-full>"
+                                      onClick={() =>
+                                        handleDeleteBook(book.bookId)
+                                      }
+                                    >
+                                      Remove
+                                    </button>
+                                    <button
+                                      className="inline-flex rounded font-bold py-2 px-4 rounded-full>"
+                                      onClick={() =>
+                                        handleAddToWishlist(book.bookId)
+                                      }
+                                    >
+                                      Add to Wishlist
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
                           </li>
                         </ul>
                       </div>
+                      <div className="p-2"></div>
+                      
+
+                      <Menu
+                        as="div"
+                        className="relative inline-block text-left"
+                      >
+                        <div>
+                          {/* <Menu.Button className="cursor-pointer inline-flex items-center justify-center rounded-md border border-indigo-200 px-4 py-2 text-sm font-medium text-indigo-200 shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100">
+														Comment
+													</Menu.Button> */}
+                        </div>
+
+                        <Transition
+                          as={Fragment}
+                          enter="transition ease-out duration-100"
+                          enterFrom="transform opacity-0 scale-95"
+                          enterTo="transform opacity-100 scale-100"
+                          leave="transition ease-in duration-75"
+                          leaveFrom="transform opacity-100 scale-100"
+                          leaveTo="transform opacity-0 scale-95"
+                        >
+                          <Menu.Items className="rounded-xl absolute left-0 z-10 mt-2 w-56 origin-top-right bg-slate-700 p-4 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                            <div className="py-1">
+                              <Menu.Item>
+                                {({ active }) => (
+                                  <textarea
+                                    id="message"
+                                    className={classNames(
+                                      active
+                                        ? "bg-slate-900 text-gray-100"
+                                        : "text-gray-100",
+                                      "block px-4 text-sm bg-slate-900"
+                                    )}
+                                  >
+                                    Write your comment here
+                                  </textarea>
+                                )}
+                              </Menu.Item>
+
+                              <Menu.Item>
+                                {({ active }) => (
+                                  <div className="pt-2">
+                                    <a
+                                      href
+                                      className={classNames(
+                                        active
+                                          ? "bg-slate-900 cursor-pointer inline-flex items-center justify-center rounded-md border border-indigo-200 px-4 py-2 text-sm font-medium text-indigo-200 shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100"
+                                          : "bg-slate-900 cursor-pointer inline-flex items-center justify-center rounded-md border border-indigo-200 px-4 py-2 text-sm font-medium text-indigo-200 shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100",
+                                        "bg-slate-900 cursor-pointer inline-flex items-center justify-center rounded-md border border-indigo-200 px-4 py-2 text-sm font-medium text-indigo-200 shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100"
+                                      )}
+                                    >
+                                      Submit your comment
+                                    </a>
+                                  </div>
+                                )}
+                              </Menu.Item>
+                            </div>
+                          </Menu.Items>
+                        </Transition>
+                      </Menu>
+                    </>
+                  ))}
+                  <a
+                    href="/search"
+                    className="cursor-pointer block bg-[#090c26] hover:bg-slate-800 px-4 py-4 text-center font-medium sm:rounded-b-lg"
+                  >
+                    Add to list
+                  </a>
+                </div>
+              </div>
+            </section>
+            <section>
+              
+              <div className="mt-8 px-4 sm:px-6">
+                <h2 className="text-4xl text-indigo-300 font-medium drop-shadow">
+                  Willing to Trade
+                </h2>
+              </div>
+              <div className="bg-slate-900 shadow-lg sm:rounded-lg mt-8">
+                <div className="px-4 py-5 sm:px-6">
+                  {" "}
+                  {userData?.savedBooks?.map((book) => (
+                    <>
+                      <div className="overflow-hidden bg-[#22274f] shadow sm:rounded-md">
+                        <ul className="divide-y divide-gray-700">
+                          <li>
+                            <div className="block hover:bg-slate-800">
+                              <div className="px-4 py-2 sm:px-6">
+                                <div className="flex gap-2 justify-between">
+                                  <img
+                                  className="rounded"
+                                    alt={`cover of ${book.title}`}
+                                    src={book.image}
+                                  />
+                                  <div>
+                                  <h2 className="font-lg ">{book.title}</h2>
+                                  <div>
+                                    <RatingStars />
+                                  </div>
+                                  </div>
+                                  <div className="ml-2 flex flex-col justify-evenly">
+                                    <button
+                                      className="inline-flex justify-center rounded font-bold py-2 px-4 rounded-full>"
+                                      onClick={() =>
+                                        handleDeleteBook(book.bookId)
+                                      }
+                                    >
+                                      Remove
+                                    </button>
+                                    <button
+                                      className="inline-flex rounded font-bold py-2 px-4 rounded-full>"
+                                      onClick={() =>
+                                        handleAddToWishlist(book.bookId)
+                                      }
+                                    >
+                                      Add to Wishlist
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                      <div className="p-2"></div>
+                      
 
                       <Menu
                         as="div"

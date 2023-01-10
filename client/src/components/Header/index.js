@@ -2,9 +2,9 @@ import React from "react";
 import { useSpring, animated } from "react-spring";
 import Sparkle from "react-sparkle";
 import Burger from "../Burger/Burger";
-import RandomAnimal from "../../hooks/RandomAnimal";
 import { Link } from "react-router-dom";
 import Auth from "../../utils/auth";
+import logo from '../../images/bohde_logo.png'
 
 const Header = () => {
   const style1 = useSpring({
@@ -23,13 +23,8 @@ const Header = () => {
       <nav>
         <animated.div style={style1}>
           <div className="mx-8 my-6 flex justify-between items-center">
-            <div>
-              <h1 className="drop-shadow-lg text-5xl md:text-7xl">
-                <div className="transition-all ease-in duration-300 hover:text-[#7286ff] cursor-default">
-                  book<span className="text-[#7286ff]">swap</span>
-                </div>
-              </h1>
-            </div>
+       {/* <h1 className="text-6xl">Under the Bodhe Tree</h1> */}
+       <img src={logo} className="w-60"></img>
 
             <div>
               {/* NAVBAR AT 768PX & HIGHER */}
@@ -76,7 +71,6 @@ const Header = () => {
       {/* GENERATE ANIMAL HEADER */}
       <animated.div style={style1}>
         <div className="mt-0 mb-8 flex flex-col justify-center items-center">
-          <RandomAnimal />
           <Sparkle
             // color={'#f9d18f'}
             count={10}
