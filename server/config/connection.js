@@ -4,7 +4,7 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://192.168.1.11:3000/under-t
   useNewUrlParser: true,
   useUnifiedTopology: true,
   // useCreateIndex: true,
-  // useFindAndModify: false,
+  // useFindAndModify: false,clea
 }).catch((err) => {
   console.error(err);
 })
