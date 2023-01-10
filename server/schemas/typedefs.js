@@ -7,6 +7,8 @@ const typeDefs = gql`
     user(username: String!): User
     comments(username: String): [Comment]
     comment(_id: ID!): Comment
+    getUserTrade(bookId: String!): [User]
+    getUserWish(bookId: String!): [User]
   }
   type Mutation {
     login(email: String!, password: String!): Auth
@@ -15,8 +17,8 @@ const typeDefs = gql`
     deleteUser(id: ID!): Boolean
     saveBook(input: savedBook!): User
     removeBook(bookId: ID!): User
-    toggleTradeBool(bookId: ID!): User
-    setRating(bookId: ID!, rating: Int): User
+    toggleTradeBool(bookId: String!): User
+    setRating(bookId: String!, rating: Int): User
     addComment(commentText: String!, book_id: String!): Comment
     addFriend(friendId: ID!): User
   }
