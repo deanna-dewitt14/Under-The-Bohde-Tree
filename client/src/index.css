@@ -34,7 +34,7 @@
     @apply text-[#6bfbce];
     @apply transition-all;
     @apply ease-in;
-    @apply duration-300;
+    @apply duration-100;
   }
 
   a:hover {

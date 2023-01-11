@@ -17,7 +17,7 @@ const Index = () => {
         <div className="max-w-screen-lg w-full mb-8 grid sm:grid-cols-3 mx-auto">
           <div className="flex flex-col justify-center items-center px-8 py-4 text-center border-b sm:border-b-0 sm:border-r border-gray-700">
             {/* GETTING STARTED INFO HERE */}
-            {/* <GiSpellBook size={65} style={{ color: '#ffffff' }} className="flex justify-center items-center" /> */}
+
             <h3 className="font-medium">Welcome</h3>
             <p>
               The Book Swap is an online community that alows avid readers to meet up with othes to discuss, view, and trade their favorite books.

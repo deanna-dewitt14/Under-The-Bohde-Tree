@@ -1,7 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import "react-dropdown/style.css";
 import Dropdown from "react-dropdown";
-import { Menu, Transition } from "@headlessui/react";
 import { useParams, Navigate } from "react-router-dom";
 // mongoose, auth, graphql
 import { useMutation, useQuery } from "@apollo/client";
@@ -10,8 +9,8 @@ import { QUERY_ME, QUERY_USER } from "../utils/queries";
 import { ADD_FRIEND, REMOVE_BOOK } from "../utils/mutations";
 import { removeBookId } from "../utils/localStorage";
 // import components
-import FriendList from "../components/FriendList";
 import RatingStars from "../components/RatingStars";
+import Modal from "../components/modal/Modal"
 
 //import icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -24,7 +23,6 @@ function classNames(...classes) {
 
 const Profile = () => {
   // retrieve user information
-  const [addFriend] = useMutation(ADD_FRIEND);
   const { username: userParam } = useParams();
   const { loading, data } = useQuery(userParam ? QUERY_USER : QUERY_ME, {
     variables: { username: userParam },
@@ -49,6 +47,8 @@ const Profile = () => {
     }
   };
 
+  const [showModal, setShowModal] = useState(false);
+
   //add to wishlist
   const handleAddToWishlist = async (bookId) => {
     console.log(bookId);
@@ -67,16 +67,6 @@ const Profile = () => {
     }
   };
 
-  // add friend functionality
-  const handleClick = async () => {
-    try {
-      await addFriend({
-        variables: { id: userData._id },
-      });
-    } catch (e) {
-      console.error(e);
-    }
-  };
 
   // redirect user to profile if logged in
   if (Auth.loggedIn() && Auth.getProfile().data.username === userParam) {
@@ -102,6 +92,7 @@ const Profile = () => {
 
   return (
     <>
+    
       <main class="min-h-full">
         <div class="mx-auto max-w-3xl px-4 sm:px-6 md:flex md:items-center md:justify-between md:space-x-5 lg:max-w-7xl lg:px-8">
           <div class="flex items-center space-x-5">
@@ -156,9 +147,10 @@ const Profile = () => {
           </div>
         </div>
 
-        <div className="mx-auto mt-8 grid max-w-3xl grid-cols-1 gap-6 sm:px-6 lg:max-w-7xl lg:grid-flow-col-dense lg:grid-cols-3">
-          <div className="space-y-6 lg:col-span-2 lg:col-start-1">
-            
+            {/* LIBRARY, WISHLIST, AND WILLING TO TRADE */}
+            <div className="flex gap-4 flex justify-center m-6 ">
+
+            {/* LIBRARY */}
             <section>
               
               <div className="mt-8 px-4 sm:px-6">
@@ -167,7 +159,7 @@ const Profile = () => {
                 </h2>
               </div>
               <div className="bg-slate-900 shadow-lg sm:rounded-lg mt-8">
-                <div className="px-4 py-5 sm:px-6">
+                <div className="flex flex-col gap-4 px-4 py-5 sm:px-6">
                   {" "}
                   {userData?.savedBooks?.map((book) => (
                     <>
@@ -197,14 +189,6 @@ const Profile = () => {
                                     >
                                       Remove
                                     </button>
-                                    <button
-                                      className="inline-flex rounded font-bold py-2 px-4 rounded-full>"
-                                      onClick={() =>
-                                        handleAddToWishlist(book.bookId)
-                                      }
-                                    >
-                                      Add to Wishlist
-                                    </button>
                                   </div>
                                 </div>
                               </div>
@@ -212,67 +196,6 @@ const Profile = () => {
                           </li>
                         </ul>
                       </div>
-                      <div className="p-2"></div>
-                      
-
-                      <Menu
-                        as="div"
-                        className="relative inline-block text-left"
-                      >
-                        <div>
-                          {/* <Menu.Button className="cursor-pointer inline-flex items-center justify-center rounded-md border border-indigo-200 px-4 py-2 text-sm font-medium text-indigo-200 shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100">
-														Comment
-													</Menu.Button> */}
-                        </div>
-
-                        <Transition
-                          as={Fragment}
-                          enter="transition ease-out duration-100"
-                          enterFrom="transform opacity-0 scale-95"
-                          enterTo="transform opacity-100 scale-100"
-                          leave="transition ease-in duration-75"
-                          leaveFrom="transform opacity-100 scale-100"
-                          leaveTo="transform opacity-0 scale-95"
-                        >
-                          <Menu.Items className="rounded-xl absolute left-0 z-10 mt-2 w-56 origin-top-right bg-slate-700 p-4 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                            <div className="py-1">
-                              <Menu.Item>
-                                {({ active }) => (
-                                  <textarea
-                                    id="message"
-                                    className={classNames(
-                                      active
-                                        ? "bg-slate-900 text-gray-100"
-                                        : "text-gray-100",
-                                      "block px-4 text-sm bg-slate-900"
-                                    )}
-                                  >
-                                    Write your comment here
-                                  </textarea>
-                                )}
-                              </Menu.Item>
-
-                              <Menu.Item>
-                                {({ active }) => (
-                                  <div className="pt-2">
-                                    <a
-                                      href
-                                      className={classNames(
-                                        active
-                                          ? "bg-slate-900 cursor-pointer inline-flex items-center justify-center rounded-md border border-indigo-200 px-4 py-2 text-sm font-medium text-indigo-200 shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100"
-                                          : "bg-slate-900 cursor-pointer inline-flex items-center justify-center rounded-md border border-indigo-200 px-4 py-2 text-sm font-medium text-indigo-200 shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100",
-                                        "bg-slate-900 cursor-pointer inline-flex items-center justify-center rounded-md border border-indigo-200 px-4 py-2 text-sm font-medium text-indigo-200 shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100"
-                                      )}
-                                    >
-                                      Submit your comment
-                                    </a>
-                                  </div>
-                                )}
-                              </Menu.Item>
-                            </div>
-                          </Menu.Items>
-                        </Transition>
-                      </Menu>
                     </>
                   ))}
                   <a
@@ -284,15 +207,16 @@ const Profile = () => {
                 </div>
               </div>
             </section>
+
+            {/* WISHLIST */}
             <section>
-              
               <div className="mt-8 px-4 sm:px-6">
                 <h2 className="text-4xl text-indigo-300 font-medium drop-shadow">
                   Wishlist
                 </h2>
               </div>
               <div className="bg-slate-900 shadow-lg sm:rounded-lg mt-8">
-                <div className="px-4 py-5 sm:px-6">
+                <div className=" flex flex-col gap-4 px-4 py-5 sm:px-6">
                   {" "}
                   {userData?.savedBooks?.map((book) => (
                     <>
@@ -322,14 +246,13 @@ const Profile = () => {
                                     >
                                       Remove
                                     </button>
-                                    <button
-                                      className="inline-flex rounded font-bold py-2 px-4 rounded-full>"
-                                      onClick={() =>
-                                        handleAddToWishlist(book.bookId)
-                                      }
-                                    >
-                                      Add to Wishlist
+                                    <button onClick={() => setShowModal(true)} className="rounded">
+                                      Find
                                     </button>
+                                    {showModal ? 
+                                    <Modal setShowModal={setShowModal} book={book}/>
+                                  : ""
+                                  }
                                   </div>
                                 </div>
                               </div>
@@ -337,67 +260,6 @@ const Profile = () => {
                           </li>
                         </ul>
                       </div>
-                      <div className="p-2"></div>
-                      
-
-                      <Menu
-                        as="div"
-                        className="relative inline-block text-left"
-                      >
-                        <div>
-                          {/* <Menu.Button className="cursor-pointer inline-flex items-center justify-center rounded-md border border-indigo-200 px-4 py-2 text-sm font-medium text-indigo-200 shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100">
-														Comment
-													</Menu.Button> */}
-                        </div>
-
-                        <Transition
-                          as={Fragment}
-                          enter="transition ease-out duration-100"
-                          enterFrom="transform opacity-0 scale-95"
-                          enterTo="transform opacity-100 scale-100"
-                          leave="transition ease-in duration-75"
-                          leaveFrom="transform opacity-100 scale-100"
-                          leaveTo="transform opacity-0 scale-95"
-                        >
-                          <Menu.Items className="rounded-xl absolute left-0 z-10 mt-2 w-56 origin-top-right bg-slate-700 p-4 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                            <div className="py-1">
-                              <Menu.Item>
-                                {({ active }) => (
-                                  <textarea
-                                    id="message"
-                                    className={classNames(
-                                      active
-                                        ? "bg-slate-900 text-gray-100"
-                                        : "text-gray-100",
-                                      "block px-4 text-sm bg-slate-900"
-                                    )}
-                                  >
-                                    Write your comment here
-                                  </textarea>
-                                )}
-                              </Menu.Item>
-
-                              <Menu.Item>
-                                {({ active }) => (
-                                  <div className="pt-2">
-                                    <a
-                                      href
-                                      className={classNames(
-                                        active
-                                          ? "bg-slate-900 cursor-pointer inline-flex items-center justify-center rounded-md border border-indigo-200 px-4 py-2 text-sm font-medium text-indigo-200 shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100"
-                                          : "bg-slate-900 cursor-pointer inline-flex items-center justify-center rounded-md border border-indigo-200 px-4 py-2 text-sm font-medium text-indigo-200 shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100",
-                                        "bg-slate-900 cursor-pointer inline-flex items-center justify-center rounded-md border border-indigo-200 px-4 py-2 text-sm font-medium text-indigo-200 shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100"
-                                      )}
-                                    >
-                                      Submit your comment
-                                    </a>
-                                  </div>
-                                )}
-                              </Menu.Item>
-                            </div>
-                          </Menu.Items>
-                        </Transition>
-                      </Menu>
                     </>
                   ))}
                   <a
@@ -409,15 +271,16 @@ const Profile = () => {
                 </div>
               </div>
             </section>
+
+              {/* TRADE */}
             <section>
-              
               <div className="mt-8 px-4 sm:px-6">
-                <h2 className="text-4xl text-indigo-300 font-medium drop-shadow">
+                <h2 className="text-4xl text-indigo-300 font-medium drop-shadow z-[0]">
                   Willing to Trade
                 </h2>
               </div>
               <div className="bg-slate-900 shadow-lg sm:rounded-lg mt-8">
-                <div className="px-4 py-5 sm:px-6">
+                <div className="flex flex-col gap-4 px-4 py-5 sm:px-6">
                   {" "}
                   {userData?.savedBooks?.map((book) => (
                     <>
@@ -447,14 +310,6 @@ const Profile = () => {
                                     >
                                       Remove
                                     </button>
-                                    <button
-                                      className="inline-flex rounded font-bold py-2 px-4 rounded-full>"
-                                      onClick={() =>
-                                        handleAddToWishlist(book.bookId)
-                                      }
-                                    >
-                                      Add to Wishlist
-                                    </button>
                                   </div>
                                 </div>
                               </div>
@@ -462,67 +317,6 @@ const Profile = () => {
                           </li>
                         </ul>
                       </div>
-                      <div className="p-2"></div>
-                      
-
-                      <Menu
-                        as="div"
-                        className="relative inline-block text-left"
-                      >
-                        <div>
-                          {/* <Menu.Button className="cursor-pointer inline-flex items-center justify-center rounded-md border border-indigo-200 px-4 py-2 text-sm font-medium text-indigo-200 shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100">
-														Comment
-													</Menu.Button> */}
-                        </div>
-
-                        <Transition
-                          as={Fragment}
-                          enter="transition ease-out duration-100"
-                          enterFrom="transform opacity-0 scale-95"
-                          enterTo="transform opacity-100 scale-100"
-                          leave="transition ease-in duration-75"
-                          leaveFrom="transform opacity-100 scale-100"
-                          leaveTo="transform opacity-0 scale-95"
-                        >
-                          <Menu.Items className="rounded-xl absolute left-0 z-10 mt-2 w-56 origin-top-right bg-slate-700 p-4 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                            <div className="py-1">
-                              <Menu.Item>
-                                {({ active }) => (
-                                  <textarea
-                                    id="message"
-                                    className={classNames(
-                                      active
-                                        ? "bg-slate-900 text-gray-100"
-                                        : "text-gray-100",
-                                      "block px-4 text-sm bg-slate-900"
-                                    )}
-                                  >
-                                    Write your comment here
-                                  </textarea>
-                                )}
-                              </Menu.Item>
-
-                              <Menu.Item>
-                                {({ active }) => (
-                                  <div className="pt-2">
-                                    <a
-                                      href
-                                      className={classNames(
-                                        active
-                                          ? "bg-slate-900 cursor-pointer inline-flex items-center justify-center rounded-md border border-indigo-200 px-4 py-2 text-sm font-medium text-indigo-200 shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100"
-                                          : "bg-slate-900 cursor-pointer inline-flex items-center justify-center rounded-md border border-indigo-200 px-4 py-2 text-sm font-medium text-indigo-200 shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100",
-                                        "bg-slate-900 cursor-pointer inline-flex items-center justify-center rounded-md border border-indigo-200 px-4 py-2 text-sm font-medium text-indigo-200 shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100"
-                                      )}
-                                    >
-                                      Submit your comment
-                                    </a>
-                                  </div>
-                                )}
-                              </Menu.Item>
-                            </div>
-                          </Menu.Items>
-                        </Transition>
-                      </Menu>
                     </>
                   ))}
                   <a
@@ -534,11 +328,10 @@ const Profile = () => {
                 </div>
               </div>
             </section>
-          </div>
-
+            </div>
           <section className="lg:col-span-1 lg:col-start-3">
             {/* FRIENDS */}
-            <div className="bg-slate-900 px-4 py-5 shadow-lg sm:rounded-lg sm:px-6">
+            {/* <div className="bg-slate-900 px-4 py-5 shadow-lg sm:rounded-lg sm:px-6">
               <h2 className="text-4xl text-indigo-300 font-medium pb-4">
                 Friends List
               </h2>
@@ -552,7 +345,6 @@ const Profile = () => {
               <div className="justify-stretch mt-6 flex flex-col">
                 {userParam && (
                   <button
-                    onClick={handleClick}
                     type="button"
                     className="cursor-pointer inline-flex items-center justify-center rounded-md border border-indigo-200 px-4 py-2 text-sm font-medium text-indigo-200 shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100"
                   >
@@ -560,9 +352,9 @@ const Profile = () => {
                   </button>
                 )}
               </div>
-            </div>
+            </div> */}
 
-            <div className="bg-slate-900 mt-8 pb-5 pt-3 shadow-lg sm:rounded-lg sm:px-6">
+            {/* <div className="bg-slate-900 mt-8 pb-5 pt-3 shadow-lg sm:rounded-lg sm:px-6">
               <h2 className="text-2xl tracking-widest text-center text-indigo-300 font-medium">
                 Stay in touch!
               </h2>
@@ -606,9 +398,8 @@ const Profile = () => {
                   </a>
                 </tr>
               </div>
-            </div>
+            </div> */}
           </section>
-        </div>
       </main>
     </>
   );

@@ -136,7 +136,7 @@ const Search = () => {
 
   return (
     <>
-      <div className="w-[85%] h-auto mx-auto flex flex-col justify-center items-center">
+      <div className="w-[85%] h-auto mx-auto mt-20 flex flex-col justify-center items-center">
         <animated.div style={style1}>
           <h2 className="text-4xl text-indigo-400 font-medium italic drop-shadow-md">
             It Is The Question That Drives Us, Search!
@@ -148,8 +148,8 @@ const Search = () => {
         <form className="flex justify-center" onSubmit={handleFormSubmit}>
           <div className="mb-3 xl:w-96">
             <div className="input-group relative flex gap-2 items-stretch w-full mb-4">
-              <input type="search" class="form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" placeholder="Search" aria-label="Search" aria-describedby="button-addon3" />
-              <button type="button" className="border-2 px-2 rounded"id="button-addon3">Search</button>
+              <input type="search" value={searchInput} onChange={e => setSearchInput(e.target.value)}className="form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" placeholder="Search" aria-label="Search" aria-describedby="button-addon3" />
+              <button type="submit" className="border-2 px-2 rounded border-[#6bfece] text-[#6bfece]"id="button-addon3">Search</button>
             </div>
           </div>
         </form>
