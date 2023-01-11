@@ -53,13 +53,13 @@ const EditProfile = () => {
                         <div className="hover:bg-indigo-700 rounded-full ease-in duration-300">
                           <label htmlFor="upload-button">
                             {image.preview ? (
-                              <div class="relative rounded-full overflow-hidden">
+                              <div className="relative rounded-full overflow-hidden">
                                 <img
                                   src={image.preview}
                                   className="opacity-50 h-16 w-16 rounded-full"
                                   alt="preview"
                                 />
-                                <div class="absolute w-full py-3 bottom-0 inset-0 mt-3 text-white text-xs text-center leading-4 rounded cursor-pointer tracking-widest ease-in duration-300">
+                                <div className="absolute w-full py-3 bottom-0 inset-0 mt-3 text-white text-xs text-center leading-4 rounded cursor-pointer tracking-widest ease-in duration-300">
                                   UPDATE
                                 </div>
                               </div>
@@ -137,7 +137,7 @@ const EditProfile = () => {
             </div>
           </div>
         </div>
-        <div class="p-10"></div>
+        <div className="p-10"></div>
       </main>
     </>
   );

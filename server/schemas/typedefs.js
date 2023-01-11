@@ -19,8 +19,6 @@ const typeDefs = gql`
     removeBook(bookId: String!): User
     toggleTradeBool(bookId: String!): User
     setRating(bookId: String!, rating: Int): User
-    addComment(commentText: String!, book_id: String!): Comment
-    addFriend(friendId: ID!): User
     addWish(input: savedBook!): User
     removeWish(bookId: String!): User
   }

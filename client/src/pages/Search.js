@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Navigate } from "react-router-dom";
 import { useSpring, animated } from "react-spring";
-import AnchorLink from "react-anchor-link-smooth-scroll";
 import RatingStars from "../components/RatingStars";
 // google books api, mongoose, auth, graphql, localstorage
 import { useMutation, useQuery } from "@apollo/client";
@@ -46,6 +45,7 @@ const Search = () => {
   }
 
   if (!user?.username) {
+    console.log(user)
     return (
       <div className="w-full flex flex-col justify-center items-center text-center">
         <h3 className="text-5xl mb-8">Oops!</h3>
@@ -193,13 +193,12 @@ const Search = () => {
 
       {/* GOOGLE BOOKS API */}
 
-      <div class="w-full h-full">
-        <div class="bookcard flex flex-row flex-wrap items-center justify-center">
+      <div className="w-full h-full">
+        <div className="bookcard flex flex-row flex-wrap items-center justify-center">
           {searchedBooks.map((book) => {
             return (
               <div className="w-full m-4 md:w-[40%]" key={book.bookId}>
                 <div
-                  class="cardBody"
                   className="w-full grid grid-cols-1 md:grid-cols-none md:grid-flow-col md:auto-cols-auto bg-slate-900 p-6 rounded-lg shadow-lg"
                 >
                   <div>
@@ -249,11 +248,7 @@ const Search = () => {
                           (savedBookId) => savedBookId === book.bookId
                         ) ? (
                           <div className="inline-flex items-center">
-                            <HiStar
-                              size={25}
-                              style={{ color: "#f9d18f" }}
-                              className="mr-1"
-                            />{" "}
+                          
                             Saved to Wishlist
                           </div>
                         ) : (
@@ -270,11 +265,6 @@ const Search = () => {
                           (savedBookId) => savedBookId === book.bookId
                         ) ? (
                           <div className="inline-flex items-center">
-                            <HiStar
-                              size={25}
-                              style={{ color: "#f9d18f" }}
-                              className="mr-1"
-                            />{" "}
                             Available to Trade
                           </div>
                         ) : (

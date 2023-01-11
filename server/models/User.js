@@ -1,8 +1,6 @@
 const { Schema, model, Types } = require("mongoose");
 const bcrypt = require("bcryptjs");
-//const jwt = require('jsonwebtoken');
-//const crypto = require('crypto');
-//import book schema
+
 const bookSchema = require("./Book");
 
 const userSchema = new Schema(
@@ -30,19 +28,6 @@ const userSchema = new Schema(
       required: true,
       minlength: 5,
     },
-
-    comments: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Comment",
-      },
-    ],
-    friends: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
     savedBooks: [bookSchema],
     wishList: [bookSchema],
   },
@@ -69,9 +54,6 @@ userSchema.methods.isCorrectPassword = async function (password) {
   return bcrypt.compare(password, this.password);
 };
 
-userSchema.virtual("friendCount").get(function () {
-  return this.friends.length;
-});
 
 const User = model("User", userSchema);
 
