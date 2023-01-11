@@ -1,4 +1,4 @@
-const { User, Comment } = require("../models");
+const { User } = require("../models");
 const { AuthenticationError } = require("apollo-server-express");
 const { signToken } = require("../utils/auth");
 
@@ -29,15 +29,7 @@ const resolvers = {
         .populate("friends")
         .populate("comments");
     },
-    comments: async (parent, { username }) => {
-      const params = username ? { username } : {};
-      const comments = await Comment.find(params).sort({ createdAt: -1 });
-      console.log(comments);
-      return comments;
-    },
-    comment: async (parent, { _id }) => {
-      return Comment.findOne({ _id });
-    },
+
     getUserTrade: async (parent, { bookId }) => {
       return User.find({ "savedBooks.bookId": bookId }).select(
         "-__v -password"
@@ -76,37 +68,7 @@ const resolvers = {
 
       return user;
     },
-    addComment: async (parent, args, context) => {
-      if (context.user) {
-        const comment = await Comment.create({
-          ...args,
-          username: context.user.username,
-        });
 
-        await User.findByIdAndUpdate(
-          { _id: context.user._id },
-          { $push: { comments: comment._id } },
-          { new: true }
-        );
-
-        return comment;
-      }
-
-      throw new AuthenticationError("You need to be logged in!");
-    },
-    addFriend: async (parent, { friendId }, context) => {
-      if (context.user) {
-        const updatedUser = await User.findOneAndUpdate(
-          { _id: context.user._id },
-          { $addToSet: { friends: friendId } },
-          { new: true }
-        ).populate("friends");
-
-        return updatedUser;
-      }
-
-      throw new AuthenticationError("You need to be logged in!");
-    },
     saveBook: async (parent, args, context) => {
       console.log("saveBook");
       if (context.user) {
