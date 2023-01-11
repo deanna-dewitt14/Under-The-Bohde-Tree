@@ -77,3 +77,13 @@ export const QUERY_ME_BASIC = gql`
     }
   }
 `;
+
+export const GET_TRADE = gql`
+query getUserTrade($bookId: String!) {
+    getUserTrade(bookId: $bookId) {
+      _id
+      username
+      email
+    }
+  }
+`

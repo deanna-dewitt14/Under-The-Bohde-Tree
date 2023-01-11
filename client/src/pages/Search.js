@@ -271,13 +271,10 @@ const Search = () => {
               </div>
             </form>
 
-            {/* END SEARCH INPUT */}
           </div>
 
-          {/* LAYOUT BREAK - HORIZONTAL LINE */}
         </div>
 
-        {/* GOOGLE BOOKS API */}
 
         <div className="w-full h-full">
           <div className="bookcard flex flex-row flex-wrap items-center justify-center">
@@ -351,7 +348,6 @@ const Search = () => {
           </div>
         </div>
       </div>
-      {/* END GOOGLE BOOKS API */}
     </>
   );
 };
