@@ -1,5 +1,4 @@
 import React from "react";
-import Burger from "../Burger/Burger";
 import { Link } from "react-router-dom";
 import Auth from "../../utils/auth";
 import logo from "../../images/bohde_logo.png";
@@ -18,7 +17,7 @@ const Header = () => {
             <img src={logo} className="w-60"></img>
           </Link>
           <div>
-            {/* NAVBAR AT 768PX & HIGHER */}
+            {/* NAVBAR */}
             <div className="uppercase ">
               <div className="hidden md:flex bg-[#02030ac8] px-7 py-2 rounded-md font-semibold gap-4 ">
                 {Auth.loggedIn() ? (
@@ -44,11 +43,6 @@ const Header = () => {
                   </>
                 )}
               </div>
-            </div>
-
-            {/* HAMBURGER MENU AT 768PX & LOWER */}
-            <div className="md:hidden">
-              <Burger />
             </div>
           </div>
         </div>
