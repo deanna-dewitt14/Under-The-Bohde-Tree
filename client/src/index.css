@@ -34,7 +34,7 @@
     @apply text-[#6bfbce];
     @apply transition-all;
     @apply ease-in;
-    @apply duration-300;
+    @apply duration-100;
   }
 
   a:hover {
@@ -48,7 +48,7 @@
     @apply tracking-widest;
     @apply transition-all;
     @apply ease-in;
-    @apply duration-300;
+    @apply duration-100;
   }
 
   button:hover {
@@ -65,42 +65,4 @@ label,
 textarea,
 input {
   font-family: poppins, sans-serif;
-}
-
-div.Dropdown-menu {
-  @apply bg-slate-700;
-  @apply text-yellow-100;
-  @apply border-slate-600;
-}
-
-div.Dropdown-control {
-  @apply bg-slate-700;
-  @apply text-yellow-100;
-  @apply font-semibold;
-  @apply border-slate-600;
-}
-
-div.Dropdown-option {
-  @apply bg-slate-700;
-  @apply text-yellow-100;
-  @apply text-base;
-  @apply font-semibold;
-}
-
-div.Dropdown-option.is-selected {
-  @apply bg-slate-900;
-  @apply text-yellow-100;
-  @apply font-semibold;
-}
-
-div.Dropdown-option:hover {
-  @apply bg-slate-900;
-  @apply text-yellow-100;
-  @apply font-semibold;
-}
-
-span svg.star-svg {
-  @apply inline-flex;
-  @apply w-5;
-  @apply h-5;
 }

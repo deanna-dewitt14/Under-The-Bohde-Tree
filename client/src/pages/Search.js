@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams, Navigate } from "react-router-dom";
 import { useSpring, animated } from "react-spring";
-import AnchorLink from "react-anchor-link-smooth-scroll";
-import RatingStars from "../components/RatingStars";
+
 // google books api, mongoose, auth, graphql, localstorage
 import { useMutation, useQuery } from "@apollo/client";
 import { googleBookSearch } from "../utils/API";
@@ -10,10 +9,13 @@ import Auth from "../utils/auth";
 import { SAVE_BOOK, SAVE_WISHLIST } from "../utils/mutations";
 import { saveBookIds, getSavedBookIds } from "../utils/localStorage";
 import { QUERY_ME_BASIC } from "../utils/queries";
+
 // import icons & images
+
 import { HiOutlineStar, HiStar } from "react-icons/hi";
 import { BsChevronCompactLeft, BsChevronCompactRight } from 'react-icons/bs'
 import { RxDotFilled } from 'react-icons/rx'
+
 
 const Search = () => {
   const [searchedBooks, setSearchedBooks] = useState([]);
@@ -22,9 +24,6 @@ const Search = () => {
   const [saveBook] = useMutation(SAVE_BOOK);
   const [saveBookToWishlist] = useMutation(SAVE_WISHLIST);
   const { loading, data } = useQuery(QUERY_ME_BASIC);
-  // const { data: userData } = useQuery(QUERY_ME_BASIC);
-  // const comments = data?.comments || [];
-  // const loggedIn = Auth.loggedIn();
   const [currentIndex, setCurrentIndex] = useState(0)
 
   // slider functionality
@@ -44,6 +43,7 @@ const Search = () => {
   const goToSlide = (slideIndex) => {
     setCurrentIndex(slideIndex)
   }
+
 
   // animation effect
   const style1 = useSpring({
@@ -69,6 +69,7 @@ const Search = () => {
   }
 
   if (!user?.username) {
+    console.log(user);
     return (
       <div className="w-full flex flex-col justify-center items-center text-center">
         <h3 className="text-5xl mb-8">Oops!</h3>
@@ -103,6 +104,7 @@ const Search = () => {
         title: book.volumeInfo.title,
         description: book.volumeInfo.description,
         image: book.volumeInfo.imageLinks?.thumbnail || "",
+        tradeBool: book.tradeBool,
       }));
 
       setSearchedBooks(bookData);
@@ -115,28 +117,30 @@ const Search = () => {
   //function to save book to db
   const handleSavedBook = async (bookId) => {
     const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
-    console.log({ bookToSave });
+    console.log(bookToSave);
 
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
     if (!token) {
+      console.log("no token");
       return false;
     }
 
     try {
       await saveBook({
-        variables: { input: { ...bookToSave } },
+        variables: { input: bookToSave },
       });
 
       setSavedBookIds([...savedBookIds, bookToSave.bookId]);
     } catch (err) {
-      console.error(err);
+      console.error(err, JSON.stringify(err, null, 2));
     }
   };
+
   //function to save book to db
   const handleWishlist = async (bookId) => {
     const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
-    console.log({ bookToSave });
+    console.log(bookToSave);
 
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
@@ -146,9 +150,8 @@ const Search = () => {
 
     try {
       await saveBookToWishlist({
-        variables: { input: { ...bookToSave } },
+        variables: { input: bookToSave },
       });
-
       setSavedBookIds([...savedBookIds, bookToSave.bookId]);
     } catch (err) {
       console.error(err);
@@ -210,6 +213,7 @@ const Search = () => {
 
   return (
     <>
+
       <div className="w-[85%] h-auto mx-auto flex flex-col justify-center items-center">
 
         {/* Slider Start */}
@@ -239,6 +243,8 @@ const Search = () => {
             </div>
         </div>
 
+
+      <div className="w-[85%] h-auto mx-auto mt-20 flex flex-col justify-center items-center">
         <animated.div style={style1}>
           <h2 className="text-4xl text-indigo-400 font-medium italic drop-shadow-md">
             It Is The Question That Drives Us, Search!
@@ -248,60 +254,43 @@ const Search = () => {
 
         {/* SEARCH INPUT */}
         <div className="py-5">
-          <form className="search w-[500px]" onSubmit={handleFormSubmit}>
-            <label for="search" className="sr-only">
-              Search
-            </label>
-
-            <div className="relative">
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <svg
-                  className="h-5 w-5 text-teal-300"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  aria-hidden="true"
+          <form className="flex justify-center" onSubmit={handleFormSubmit}>
+            <div className="mb-3 xl:w-96">
+              <div className="input-group relative flex gap-2 items-stretch w-full mb-4">
+                <input
+                  type="search"
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  className="form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                  placeholder="Search"
+                  aria-label="Search"
+                  aria-describedby="button-addon3"
+                />
+                <button
+                  type="submit"
+                  className="border-2 px-2 rounded border-[#6bfece] text-[#6bfece]"
+                  id="button-addon3"
                 >
-                  <path
-                    fill-rule="evenodd"
-                    d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
+                  Search
+                </button>
               </div>
-              <input
-                name="search"
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                type="text"
-                className="block w-full rounded-md bg-slate-900 border border-slate-600 text-gray-200 placeholder-slate-500 mt-2 mb-4 py-2 pl-10 pr-3 text-sm focus:border-indigo-500 focus:text-gray-200 focus:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-2xl"
-                placeholder="Search"
-              ></input>
             </div>
           </form>
 
           {/* END SEARCH INPUT */}
-
-          <AnchorLink className="flex justify-center" href="#Feed">
-            Follow The White Rabbit!
-          </AnchorLink>
         </div>
 
         {/* LAYOUT BREAK - HORIZONTAL LINE */}
-   
       </div>
 
       {/* GOOGLE BOOKS API */}
 
-      <div class="w-full h-full">
-        <div class="bookcard flex flex-row flex-wrap items-center justify-center">
+      <div className="w-full h-full">
+        <div className="bookcard flex flex-row flex-wrap items-center justify-center">
           {searchedBooks.map((book) => {
             return (
               <div className="w-full m-4 md:w-[40%]" key={book.bookId}>
-                <div
-                  class="cardBody"
-                  className="w-full grid grid-cols-1 md:grid-cols-none md:grid-flow-col md:auto-cols-auto bg-slate-900 p-6 rounded-lg shadow-lg"
-                >
+                <div className="w-full grid grid-cols-1 md:grid-cols-none md:grid-flow-col md:auto-cols-auto bg-slate-900 p-6 rounded-lg shadow-lg">
                   <div>
                     {book.image ? (
                       <img
@@ -331,21 +320,9 @@ const Search = () => {
                         {savedBookIds?.some(
                           (savedBookId) => savedBookId === book.bookId
                         ) ? (
-                          <div className="inline-flex items-center">
-                            <HiStar
-                              size={25}
-                              style={{ color: "#f9d18f" }}
-                              className="mr-1"
-                            />{" "}
-                            Saved
-                          </div>
+                          <div className="inline-flex items-center">Saved</div>
                         ) : (
                           <div className="inline-flex items-center">
-                            <HiOutlineStar
-                              size={25}
-                              style={{ color: "#f9d18f" }}
-                              className="mr-1"
-                            />{" "}
                             Save Book
                           </div>
                         )}
@@ -361,28 +338,15 @@ const Search = () => {
                           (savedBookId) => savedBookId === book.bookId
                         ) ? (
                           <div className="inline-flex items-center">
-                            <HiStar
-                              size={25}
-                              style={{ color: "#f9d18f" }}
-                              className="mr-1"
-                            />{" "}
                             Saved to Wishlist
                           </div>
                         ) : (
                           <div className="inline-flex items-center">
-                            <HiOutlineStar
-                              size={25}
-                              style={{ color: "#f9d18f" }}
-                              className="mr-1"
-                            />{" "}
                             Add to Wishlist
                           </div>
                         )}
                       </button>
-                      {/* )} */}
                     </div>
-
-                    <RatingStars />
                   </div>
                 </div>
               </div>
@@ -391,8 +355,6 @@ const Search = () => {
         </div>
       </div>
       {/* END GOOGLE BOOKS API */}
-
-      
     </>
   );
 };

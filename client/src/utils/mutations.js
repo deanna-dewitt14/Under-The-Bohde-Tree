@@ -26,23 +26,28 @@ export const ADD_USER = gql`
   }
 `;
 
-export const ADD_FRIEND = gql`
-  mutation addFriend($id: ID!) {
-    addFriend(friendId: $id) {
-      _id
-      username
-      friendCount
-      friends {
-        _id
-        username
-      }
-    }
-  }
-`;
-
 export const SAVE_BOOK = gql`
-  mutation saveBook($input: BookInput!) {
+  mutation saveBook($input: savedBook!) {
     saveBook(input: $input) {
+      _id
+      username
+      email
+      savedBooks {
+        # _id
+        bookId
+        authors
+        description
+        title
+        image
+        tradeBool
+        rating
+      }
+    }
+  }
+`;
+export const SAVE_WISHLIST = gql`
+  mutation addWish($input: savedBook!) {
+    addWish(input: $input) {
       _id
       username
       email
@@ -56,10 +61,24 @@ export const SAVE_BOOK = gql`
     }
   }
 `;
-// TODO: Update SAVE_WISHLIST
-export const SAVE_WISHLIST = gql`
-  mutation saveBook($input: BookInput!) {
-    saveBook(input: $input) {
+export const REMOVE_WISH = gql`
+  mutation removeWish($bookId: String!) {
+    removeWish(bookId: $bookId) {
+      _id
+      username
+      savedBooks {
+        bookId
+        authors
+        description
+        title
+        image
+      }
+    }
+  }
+`;
+export const TOGGLE_TRADE = gql`
+  mutation toggleTradeBool($bookId: String!) {
+    toggleTradeBool(bookId: $bookId) {
       _id
       username
       email
@@ -69,6 +88,7 @@ export const SAVE_WISHLIST = gql`
         description
         title
         image
+        tradeBool
       }
     }
   }
@@ -86,18 +106,6 @@ export const REMOVE_BOOK = gql`
         title
         image
       }
-    }
-  }
-`;
-
-export const ADD_COMMENT = gql`
-  mutation addComment($commentText: String!, $book_id: String!) {
-    addComment(commentText: $commentText, book_id: $book_id) {
-      _id
-      commentText
-      createdAt
-      username
-      book_id
     }
   }
 `;
