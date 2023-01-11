@@ -1,25 +1,15 @@
 import React, { useState, useEffect, Fragment } from "react";
 import "react-dropdown/style.css";
-import Dropdown from "react-dropdown";
 import { useParams, Navigate } from "react-router-dom";
 // mongoose, auth, graphql
 import { useMutation, useQuery } from "@apollo/client";
 import Auth from "../utils/auth";
 import { QUERY_ME, QUERY_USER } from "../utils/queries";
-import { ADD_FRIEND, REMOVE_BOOK } from "../utils/mutations";
+import { REMOVE_BOOK, REMOVE_WISH } from "../utils/mutations";
 import { removeBookId } from "../utils/localStorage";
 // import components
 import RatingStars from "../components/RatingStars";
-import Modal from "../components/modal/Modal"
-
-//import icons
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInstagram } from "@fortawesome/free-brands-svg-icons";
-import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
+import Modal from "../components/modal/Modal";
 
 const Profile = () => {
   // retrieve user information
@@ -31,6 +21,8 @@ const Profile = () => {
 
   // remove book functionality
   const [deleteBook] = useMutation(REMOVE_BOOK);
+  const [removeWish] = useMutation(REMOVE_WISH);
+
   const handleDeleteBook = async (bookId) => {
     const token = Auth.loggedIn() ? Auth.getToken() : null;
     if (!token) {
@@ -48,16 +40,24 @@ const Profile = () => {
   };
 
   const [showModal, setShowModal] = useState(false);
+  const [modalBook, setModalBook] = useState({});
 
+  const handleModal = (book) => {
+    console.log('hit')
+    setShowModal(true);
+    // setModalProps(book, showModal, setShowModal)
+    setModalBook(book)
+  };
+  
   //add to wishlist
-  const handleAddToWishlist = async (bookId) => {
+  const handleRemoveWish = async (bookId) => {
     console.log(bookId);
     const token = Auth.loggedIn() ? Auth.getToken() : null;
     if (!token) {
       return false;
     }
     try {
-      await deleteBook({
+      await removeWish({
         variables: { bookId },
       });
 
@@ -66,7 +66,6 @@ const Profile = () => {
       console.error(err);
     }
   };
-
 
   // redirect user to profile if logged in
   if (Auth.loggedIn() && Auth.getProfile().data.username === userParam) {
@@ -92,7 +91,7 @@ const Profile = () => {
 
   return (
     <>
-    
+    <Modal showModal={showModal} setShowModal={setShowModal} book={modalBook} />
       <main class="min-h-full">
         <div class="mx-auto max-w-3xl px-4 sm:px-6 md:flex md:items-center md:justify-between md:space-x-5 lg:max-w-7xl lg:px-8">
           <div class="flex items-center space-x-5">
@@ -147,191 +146,192 @@ const Profile = () => {
           </div>
         </div>
 
-            {/* LIBRARY, WISHLIST, AND WILLING TO TRADE */}
-            <div className="flex gap-4 flex justify-center m-6 ">
-
-            {/* LIBRARY */}
-            <section>
-              
-              <div className="mt-8 px-4 sm:px-6">
-                <h2 className="text-4xl text-indigo-300 font-medium drop-shadow">
-                  Library
-                </h2>
-              </div>
-              <div className="bg-slate-900 shadow-lg sm:rounded-lg mt-8">
-                <div className="flex flex-col gap-4 px-4 py-5 sm:px-6">
-                  {" "}
-                  {userData?.savedBooks?.map((book) => (
-                    <>
-                      <div className="overflow-hidden bg-[#22274f] shadow sm:rounded-md">
-                        <ul className="divide-y divide-gray-700">
-                          <li>
-                            <div className="block hover:bg-slate-800">
-                              <div className="px-4 py-2 sm:px-6">
-                                <div className="flex gap-2 justify-between">
-                                  <img
-                                  className="rounded"
-                                    alt={`cover of ${book.title}`}
-                                    src={book.image}
-                                  />
-                                  <div>
-                                  <h2 className="font-medium ">{book.title}</h2>
-                                  <div>
-                                    <RatingStars />
-                                  </div>
-                                  </div>
-                                  <div className="ml-2 flex flex-col justify-evenly">
-                                    <button
-                                      className="inline-flex justify-center rounded font-bold py-2 px-4 rounded-full>"
-                                      onClick={() =>
-                                        handleDeleteBook(book.bookId)
-                                      }
-                                    >
-                                      Remove
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                    </>
-                  ))}
-                  <a
-                    href="/search"
-                    className="cursor-pointer block bg-[#090c26] hover:bg-slate-800 px-4 py-4 text-center font-medium sm:rounded-b-lg"
-                  >
-                    Add to list
-                  </a>
-                </div>
-              </div>
-            </section>
-
-            {/* WISHLIST */}
-            <section>
-              <div className="mt-8 px-4 sm:px-6">
-                <h2 className="text-4xl text-indigo-300 font-medium drop-shadow">
-                  Wishlist
-                </h2>
-              </div>
-              <div className="bg-slate-900 shadow-lg sm:rounded-lg mt-8">
-                <div className=" flex flex-col gap-4 px-4 py-5 sm:px-6">
-                  {" "}
-                  {userData?.savedBooks?.map((book) => (
-                    <>
-                      <div className="overflow-hidden bg-[#22274f] shadow sm:rounded-md">
-                        <ul className="divide-y divide-gray-700">
-                          <li>
-                            <div className="block hover:bg-slate-800">
-                              <div className="px-4 py-2 sm:px-6">
-                                <div className="flex gap-2 justify-between">
-                                  <img
-                                  className="rounded"
-                                    alt={`cover of ${book.title}`}
-                                    src={book.image}
-                                  />
-                                  <div>
-                                  <h2 className="font-medium ">{book.title}</h2>
-                                  <div>
-                                    <RatingStars />
-                                  </div>
-                                  </div>
-                                  <div className="ml-2 flex flex-col justify-evenly">
-                                    <button
-                                      className="inline-flex justify-center rounded font-bold py-2 px-4 rounded-full>"
-                                      onClick={() =>
-                                        handleDeleteBook(book.bookId)
-                                      }
-                                    >
-                                      Remove
-                                    </button>
-                                    <button onClick={() => setShowModal(true)} className="rounded">
-                                      Find
-                                    </button>
-                                    {showModal ? 
-                                    <Modal setShowModal={setShowModal} book={book}/>
-                                  : ""
-                                  }
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                    </>
-                  ))}
-                  <a
-                    href="/search"
-                    className="cursor-pointer block bg-[#090c26] hover:bg-slate-800 px-4 py-4 text-center font-medium sm:rounded-b-lg"
-                  >
-                    Add to list
-                  </a>
-                </div>
-              </div>
-            </section>
-
-              {/* TRADE */}
-            <section>
-              <div className="mt-8 px-4 sm:px-6">
-                <h2 className="text-4xl text-indigo-300 font-medium drop-shadow z-[0]">
-                  Willing to Trade
-                </h2>
-              </div>
-              <div className="bg-slate-900 shadow-lg sm:rounded-lg mt-8">
-                <div className="flex flex-col gap-4 px-4 py-5 sm:px-6">
-                  {" "}
-                  {userData?.savedBooks?.map((book) => (
-                    <>
-                      <div className="overflow-hidden bg-[#22274f] shadow sm:rounded-md">
-                        <ul className="divide-y divide-gray-700">
-                          <li>
-                            <div className="block hover:bg-slate-800">
-                              <div className="px-4 py-2 sm:px-6">
-                                <div className="flex gap-2 justify-between">
-                                  <img
-                                  className="rounded"
-                                    alt={`cover of ${book.title}`}
-                                    src={book.image}
-                                  />
-                                  <div>
-                                  <h2 className="font-lg ">{book.title}</h2>
-                                  <div>
-                                    <RatingStars />
-                                  </div>
-                                  </div>
-                                  <div className="ml-2 flex flex-col justify-evenly">
-                                    <button
-                                      className="inline-flex justify-center rounded font-bold py-2 px-4 rounded-full>"
-                                      onClick={() =>
-                                        handleDeleteBook(book.bookId)
-                                      }
-                                    >
-                                      Remove
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                    </>
-                  ))}
-                  <a
-                    href="/search"
-                    className="cursor-pointer block bg-[#090c26] hover:bg-slate-800 px-4 py-4 text-center font-medium sm:rounded-b-lg"
-                  >
-                    Add to list
-                  </a>
-                </div>
-              </div>
-            </section>
+        {/* LIBRARY, WISHLIST, AND WILLING TO TRADE */}
+        <div className="flex gap-4 flex justify-center m-6 ">
+          {/* LIBRARY */}
+          <section>
+            <div className="mt-8 px-4 sm:px-6">
+              <h2 className="text-4xl text-indigo-300 font-medium drop-shadow">
+                Library
+              </h2>
             </div>
-          <section className="lg:col-span-1 lg:col-start-3">
-            {/* FRIENDS */}
-            {/* <div className="bg-slate-900 px-4 py-5 shadow-lg sm:rounded-lg sm:px-6">
+            <div className="bg-slate-900 shadow-lg sm:rounded-lg mt-8">
+              <div className="flex flex-col gap-4 px-4 py-5 sm:px-6">
+                {" "}
+                {userData?.savedBooks?.map((book) => (
+                  <>
+                    <div className="overflow-hidden bg-[#22274f] shadow sm:rounded-md">
+                      <ul className="divide-y divide-gray-700">
+                        <li>
+                          <div className="block hover:bg-slate-800">
+                            <div className="px-4 py-2 sm:px-6">
+                              <div className="flex gap-2 justify-between">
+                                <img
+                                  className="rounded"
+                                  alt={`cover of ${book.title}`}
+                                  src={book.image}
+                                />
+                                <div>
+                                  <h2 className="font-medium ">{book.title}</h2>
+                                  <div>
+                                    <RatingStars />
+                                  </div>
+                                </div>
+                                <div className="ml-2 flex flex-col justify-evenly">
+                                  <button
+                                    className="inline-flex justify-center rounded font-bold py-2 px-4 rounded-full>"
+                                    onClick={() =>
+                                      handleDeleteBook(book.bookId)
+                                    }
+                                  >
+                                    Remove
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </>
+                ))}
+                <a
+                  href="/search"
+                  className="cursor-pointer block bg-[#090c26] hover:bg-slate-800 px-4 py-4 text-center font-medium sm:rounded-b-lg"
+                >
+                  Add to list
+                </a>
+              </div>
+            </div>
+          </section>
+
+          {/* WISHLIST */}
+          <section>
+            <div className="mt-8 px-4 sm:px-6">
+              <h2 className="text-4xl text-indigo-300 font-medium drop-shadow">
+                Wishlist
+              </h2>
+            </div>
+            <div className="bg-slate-900 shadow-lg sm:rounded-lg mt-8">
+              <div className=" flex flex-col gap-4 px-4 py-5 sm:px-6">
+                {" "}
+                {userData?.wishList?.map((book) => (
+                  <>
+                    <div className="overflow-hidden bg-[#22274f] shadow sm:rounded-md">
+                      <ul className="divide-y divide-gray-700">
+                        <li>
+                          <div className="block hover:bg-slate-800">
+                            <div className="px-4 py-2 sm:px-6">
+                              <div className="flex gap-2 justify-between">
+                                <img
+                                  className="rounded"
+                                  alt={`cover of ${book.title}`}
+                                  src={book.image}
+                                />
+                                <div>
+                                  <h2 className="font-medium ">{book.title}</h2>
+                                  <div>
+                                    <RatingStars />
+                                  </div>
+                                </div>
+                                <div className="ml-2 flex flex-col justify-evenly">
+                                  <button
+                                    className="inline-flex justify-center rounded font-bold py-2 px-4 rounded-full>"
+                                    onClick={() =>
+                                      handleRemoveWish(book.bookId)
+                                    }
+                                  >
+                                    Remove
+                                  </button>
+                                  <button
+                                    onClick={() => handleModal(book)}
+                                    className="rounded"
+                                  >
+                                    Find
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </>
+                ))}
+                <a
+                  href="/search"
+                  className="cursor-pointer block bg-[#090c26] hover:bg-slate-800 px-4 py-4 text-center font-medium sm:rounded-b-lg"
+                >
+                  Add to list
+                </a>
+              </div>
+            </div>
+          </section>
+
+          {/* TRADE */}
+          <section>
+            <div className="mt-8 px-4 sm:px-6">
+              <h2 className="text-4xl text-indigo-300 font-medium drop-shadow z-[0]">
+                Willing to Trade
+              </h2>
+            </div>
+            <div className="bg-slate-900 shadow-lg sm:rounded-lg mt-8">
+              <div className="flex flex-col gap-4 px-4 py-5 sm:px-6">
+                {" "}
+                {userData?.savedBooks
+                  ?.filter((book) => {
+                    return book.tradeBool === true;
+                  })
+                  .map((book) => (
+                    <>
+                      <div className="overflow-hidden bg-[#22274f] shadow sm:rounded-md">
+                        <ul className="divide-y divide-gray-700">
+                          <li>
+                            <div className="block hover:bg-slate-800">
+                              <div className="px-4 py-2 sm:px-6">
+                                <div className="flex gap-2 justify-between">
+                                  <img
+                                    className="rounded"
+                                    alt={`cover of ${book.title}`}
+                                    src={book.image}
+                                  />
+                                  <div>
+                                    <h2 className="font-lg ">{book.title}</h2>
+                                    <div>
+                                      <RatingStars />
+                                    </div>
+                                  </div>
+                                  <div className="ml-2 flex flex-col justify-evenly">
+                                    <button
+                                      className="inline-flex justify-center rounded font-bold py-2 px-4 rounded-full>"
+                                      onClick={() =>
+                                        handleDeleteBook(book.bookId)
+                                      }
+                                    >
+                                      Remove
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </>
+                  ))}
+                <a
+                  href="/search"
+                  className="cursor-pointer block bg-[#090c26] hover:bg-slate-800 px-4 py-4 text-center font-medium sm:rounded-b-lg"
+                >
+                  Add to list
+                </a>
+              </div>
+            </div>
+          </section>
+        </div>
+        <section className="lg:col-span-1 lg:col-start-3">
+          {/* FRIENDS */}
+          {/* <div className="bg-slate-900 px-4 py-5 shadow-lg sm:rounded-lg sm:px-6">
               <h2 className="text-4xl text-indigo-300 font-medium pb-4">
                 Friends List
               </h2>
@@ -354,7 +354,7 @@ const Profile = () => {
               </div>
             </div> */}
 
-            {/* <div className="bg-slate-900 mt-8 pb-5 pt-3 shadow-lg sm:rounded-lg sm:px-6">
+          {/* <div className="bg-slate-900 mt-8 pb-5 pt-3 shadow-lg sm:rounded-lg sm:px-6">
               <h2 className="text-2xl tracking-widest text-center text-indigo-300 font-medium">
                 Stay in touch!
               </h2>
@@ -399,7 +399,7 @@ const Profile = () => {
                 </tr>
               </div>
             </div> */}
-          </section>
+        </section>
       </main>
     </>
   );
