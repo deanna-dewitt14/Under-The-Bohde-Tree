@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams, Navigate } from "react-router-dom";
 import { useSpring, animated } from "react-spring";
 import AnchorLink from "react-anchor-link-smooth-scroll";
@@ -12,6 +12,8 @@ import { saveBookIds, getSavedBookIds } from "../utils/localStorage";
 import { QUERY_ME_BASIC } from "../utils/queries";
 // import icons & images
 import { HiOutlineStar, HiStar } from "react-icons/hi";
+import { BsChevronCompactLeft, BsChevronCompactRight } from 'react-icons/bs'
+import { RxDotFilled } from 'react-icons/rx'
 
 const Search = () => {
   const [searchedBooks, setSearchedBooks] = useState([]);
@@ -23,6 +25,25 @@ const Search = () => {
   // const { data: userData } = useQuery(QUERY_ME_BASIC);
   // const comments = data?.comments || [];
   // const loggedIn = Auth.loggedIn();
+  const [currentIndex, setCurrentIndex] = useState(0)
+
+  // slider functionality
+
+  const prevSlide = () => {
+    const isFirstSlide = currentIndex === 0;
+    const newIndex = isFirstSlide ? slides.length -1 : currentIndex -1;
+    setCurrentIndex(newIndex);
+  }
+
+  const nextSlide = () => {
+    const isLastSlide = currentIndex === slides.length - 1
+    const newIndex = isLastSlide ? 0 : currentIndex + 1
+    setCurrentIndex(newIndex)
+  }
+
+  const goToSlide = (slideIndex) => {
+    setCurrentIndex(slideIndex)
+  }
 
   // animation effect
   const style1 = useSpring({
@@ -134,14 +155,96 @@ const Search = () => {
     }
   };
 
+  
+  // const autoplayInterval = 3000; // 3 seconds
+
+  // function slider() {
+  //   const [currentIndex, setCurrentIndex] = useState(0)
+  //   const intervalRef = useRef(null)
+
+  //   useEffect(() => {
+  //     intervalRef.current = setInterval(() => {
+  //       nextSlide();
+  //     }, autoplayInterval)
+
+  //     return() => {
+  //       clearInterval(intervalRef.current)
+  //     }
+  //   }, [currentIndex])
+  // }
+
+  const slides = [
+    {
+      url: 'https://i0.wp.com/ebookfriendly.com/wp-content/uploads/2015/01/Axel-Marazzi-book-quote.jpg?w=540&ssl=1'
+    },
+    {
+      url: 'https://i0.wp.com/ebookfriendly.com/wp-content/uploads/2015/01/Benjamin-Franklin-book-quote.jpg?w=540&ssl=1'
+    },
+    {
+      url: 'https://i0.wp.com/ebookfriendly.com/wp-content/uploads/2014/12/Laura-Bush-book-quote-image.jpg?w=540&ssl=1'
+    },
+    {
+      url: 'https://i0.wp.com/ebookfriendly.com/wp-content/uploads/2015/01/Carlos-Ruiz-Zafon-book-quote.jpg?w=540&ssl=1'
+    },
+    {
+      url: 'https://i0.wp.com/ebookfriendly.com/wp-content/uploads/2015/01/David-Mitchell-book-quote.jpg?w=540&ssl=1'
+    },
+    {
+      url: 'https://i0.wp.com/ebookfriendly.com/wp-content/uploads/2015/01/Haruki-Murakami-book-quote.jpg?w=540&ssl=1'
+    },
+    {
+      url: 'https://i0.wp.com/ebookfriendly.com/wp-content/uploads/2015/01/J.K.-Rowling-book-quote.jpg?w=540&ssl=1'
+    },
+    {
+      url: 'https://i0.wp.com/ebookfriendly.com/wp-content/uploads/2015/01/Mortimer-Jerome-Adler-book-quote.jpg?w=540&ssl=1'
+    },
+    {
+      url: 'https://i0.wp.com/ebookfriendly.com/wp-content/uploads/2014/12/Chinese-Proverb-quote-image.jpg?w=540&ssl=1'
+    },
+    {
+      url: 'https://i0.wp.com/ebookfriendly.com/wp-content/uploads/2015/01/Maya-Angelou-book-quote.jpg?w=540&ssl=1'
+    },
+  ];
+
+  
+
   return (
     <>
       <div className="w-[85%] h-auto mx-auto flex flex-col justify-center items-center">
+
+        {/* Slider Start */}
+
+        <div className="max-w-[400px] h-[400px] w-full m-auto py-16 px-4 relative group">
+          <div style={{backgroundImage: `url(${slides[currentIndex].url})`}} className="w-full h-full rounded-2xl bg-center bg-cover duration-500"></div>
+
+            {/* Left Arrow */}
+            <div className="hidden group-hover:block absolute top-[50%] -translate-x-0 translate-y-[-50%] left-5 text-2xl rounded-full p-2 bg-black/20 text-white cursor-pointer">
+              <BsChevronCompactLeft onClick={prevSlide} size={30} />
+            </div>
+
+            {/* Right Arrow */}
+            <div className="hidden group-hover:block absolute top-[50%] -translate-x-0 translate-y-[-50%] right-5 text-2xl rounded-full p-2 bg-black/20 text-white cursor-pointer">
+              <BsChevronCompactRight onClick={nextSlide} size={30} />
+            </div>
+            <div className="flex top-4 justify-center py-2">
+              {slides.map((slide, slideIndex) => (
+                  <div
+                    key={slideIndex} 
+                    onClick={() => goToSlide(slideIndex)} 
+                    className="text-1xl cursor-pointer"
+                  >
+                    <RxDotFilled />
+                  </div>
+              ))}
+            </div>
+        </div>
+
         <animated.div style={style1}>
           <h2 className="text-4xl text-indigo-400 font-medium italic drop-shadow-md">
             It Is The Question That Drives Us, Search!
           </h2>
         </animated.div>
+        
 
         {/* SEARCH INPUT */}
         <div className="py-5">
