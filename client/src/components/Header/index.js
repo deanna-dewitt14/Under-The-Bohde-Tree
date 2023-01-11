@@ -1,18 +1,11 @@
 import React from "react";
 import { useSpring, animated } from "react-spring";
-import Sparkle from "react-sparkle";
 import Burger from "../Burger/Burger";
 import { Link } from "react-router-dom";
 import Auth from "../../utils/auth";
-import logo from '../../images/bohde_logo.png'
+import logo from "../../images/bohde_logo.png";
 
 const Header = () => {
-  const style1 = useSpring({
-    from: { opacity: 0 },
-    to: { opacity: 1 },
-    config: { duration: 1000 },
-  });
-
   const logout = (event) => {
     event.preventDefault();
     Auth.logout();
@@ -21,66 +14,46 @@ const Header = () => {
   return (
     <header>
       <nav>
-        <animated.div style={style1}>
-          <div className="mx-8 my-6 flex justify-between items-center">
-       {/* <h1 className="text-6xl">Under the Bodhe Tree</h1> */}
-       <img src={logo} className="w-60"></img>
+        <div className="mx-8 my-6 flex justify-between items-center">
+          <Link to="/search" className="">
+            <img src={logo} className="w-60"></img>
+          </Link>
+          <div>
+            {/* NAVBAR AT 768PX & HIGHER */}
+            <div className="uppercase ">
+              <div className="hidden md:flex bg-[#02030ac8] px-7 py-2 rounded-md font-semibold gap-4 ">
+                {Auth.loggedIn() ? (
+                  <>
+                    <Link to="/search">Search</Link>
+                    <Link to="/profile">Profile</Link>
+                    <button
+                      onClick={logout}
+                      className="bg-transparent hover:bg-transparent text-[#6bfbce] hover:text-[#7286ff]"
+                    >
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/signup" className="mr-6">
+                      Sign Up
+                    </Link>
 
-            <div>
-              {/* NAVBAR AT 768PX & HIGHER */}
-              <div className="uppercase tracking-widest">
-                <div className="hidden md:flex bg-[#02030ac8] px-7 py-2 rounded-md font-semibold">
-                  {Auth.loggedIn() ? (
-                    <>
-                      <Link to="/search" className="mr-6">
-                        Search
-                      </Link>
-                      <Link to="/profile" className="mx-6">
-                        Profile
-                      </Link>
-                      <button
-                        onClick={logout}
-                        className="bg-transparent hover:bg-transparent ml-6 text-[#6bfbce] hover:text-[#7286ff]"
-                      >
-                        Logout
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <Link to="/signup" className="mr-6">
-                        Sign Up
-                      </Link>
-
-                      <Link to="/login" className="ml-6">
-                        Log In
-                      </Link>
-                    </>
-                  )}
-                </div>
-              </div>
-
-              {/* HAMBURGER MENU AT 768PX & LOWER */}
-              <div className="md:hidden">
-                <Burger />
+                    <Link to="/login" className="ml-6">
+                      Log In
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
-          </div>
-        </animated.div>
-      </nav>
 
-      {/* GENERATE ANIMAL HEADER */}
-      <animated.div style={style1}>
-        <div className="mt-0 mb-8 flex flex-col justify-center items-center">
-          <Sparkle
-            // color={'#f9d18f'}
-            count={10}
-            minSize={5}
-            maxSize={15}
-            fadeOutSpeed={20}
-            flickerSpeed={"slowest"}
-          />
+            {/* HAMBURGER MENU AT 768PX & LOWER */}
+            <div className="md:hidden">
+              <Burger />
+            </div>
+          </div>
         </div>
-      </animated.div>
+      </nav>
     </header>
   );
 };

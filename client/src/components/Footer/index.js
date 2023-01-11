@@ -2,7 +2,7 @@ import React from 'react'
 
 const Footer = () => {
   return (
-    <footer class="py-8 text-center">
+    <footer class="py-8 fixed bottom-0 text-center flex justify-center w-full">
       <p class="md:text-base text-sm tracking-wider font-medium text-gray-400">
         &copy; {new Date().getFullYear()} <a href="https://bslockhart/Under-The-Bohde-Tree">Group Three</a>, Under The Bohde Tree.
       </p>

@@ -12,8 +12,6 @@ const EditProfile = () => {
     }
   };
 
-
-
   return (
     <>
       <main className="max-w-screen-md h-full mx-auto">
