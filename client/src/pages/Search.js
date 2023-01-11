@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Navigate } from "react-router-dom";
 import { useSpring, animated } from "react-spring";
-import AnchorLink from "react-anchor-link-smooth-scroll";
 import RatingStars from "../components/RatingStars";
 // google books api, mongoose, auth, graphql, localstorage
 import { useMutation, useQuery } from "@apollo/client";
@@ -193,13 +192,13 @@ const Search = () => {
 
       {/* GOOGLE BOOKS API */}
 
-      <div class="w-full h-full">
-        <div class="bookcard flex flex-row flex-wrap items-center justify-center">
+      <div className="w-full h-full">
+        <div className="bookcard flex flex-row flex-wrap items-center justify-center">
           {searchedBooks.map((book) => {
             return (
               <div className="w-full m-4 md:w-[40%]" key={book.bookId}>
                 <div
-                  class="cardBody"
+                  className="cardBody"
                   className="w-full grid grid-cols-1 md:grid-cols-none md:grid-flow-col md:auto-cols-auto bg-slate-900 p-6 rounded-lg shadow-lg"
                 >
                   <div>

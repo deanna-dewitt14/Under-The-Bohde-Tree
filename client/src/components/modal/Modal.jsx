@@ -16,7 +16,7 @@ export default function Modal({ book, showModal, setShowModal}) {
           <div onClick={() => {setShowModal(false)}} className=" flex justify-center rounded p-4 items-center h-6 w-6 m-0 text-4xl bg-slate-300 text-indigo-900 hover:bg-slate-200 hover:text-black cursor-pointer">&times;</div>
         </header>
         <hr className="border-indigo-900"></hr>
-        <div class="table-auto text-indigo-900 m-2">
+        <div className="table-auto text-indigo-900 m-2">
           {traders ? traders.map((trade) => <div>{trade}</div>) : ""}
         </div>
         <div></div>
