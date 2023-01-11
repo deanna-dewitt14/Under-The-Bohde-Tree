@@ -7,11 +7,11 @@ import RatingStars from "../components/RatingStars";
 import { useMutation, useQuery } from "@apollo/client";
 import { googleBookSearch } from "../utils/API";
 import Auth from "../utils/auth";
-import { SAVE_BOOK, SAVE_WISHLIST } from "../utils/mutations";
+import { SAVE_BOOK, SAVE_WISHLIST, TOGGLE_TRADE } from "../utils/mutations";
 import { saveBookIds, getSavedBookIds } from "../utils/localStorage";
 import { QUERY_ME_BASIC } from "../utils/queries";
 // import icons & images
-import { HiOutlineStar, HiStar } from "react-icons/hi";
+import { HiStar } from "react-icons/hi";
 
 const Search = () => {
   const [searchedBooks, setSearchedBooks] = useState([]);
@@ -19,10 +19,8 @@ const Search = () => {
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
   const [saveBook] = useMutation(SAVE_BOOK);
   const [saveBookToWishlist] = useMutation(SAVE_WISHLIST);
+  const [toggleTradeBool] = useMutation(TOGGLE_TRADE);
   const { loading, data } = useQuery(QUERY_ME_BASIC);
-  // const { data: userData } = useQuery(QUERY_ME_BASIC);
-  // const comments = data?.comments || [];
-  // const loggedIn = Auth.loggedIn();
 
   // animation effect
   const style1 = useSpring({
@@ -82,6 +80,7 @@ const Search = () => {
         title: book.volumeInfo.title,
         description: book.volumeInfo.description,
         image: book.volumeInfo.imageLinks?.thumbnail || "",
+        tradeBool: book.tradeBool,
       }));
 
       setSearchedBooks(bookData);
@@ -94,28 +93,30 @@ const Search = () => {
   //function to save book to db
   const handleSavedBook = async (bookId) => {
     const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
-    console.log({ bookToSave });
+    console.log(bookToSave);
 
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
     if (!token) {
+      console.log("no token");
       return false;
     }
 
     try {
       await saveBook({
-        variables: { input: { ...bookToSave } },
+        variables: { input: bookToSave },
       });
 
       setSavedBookIds([...savedBookIds, bookToSave.bookId]);
     } catch (err) {
-      console.error(err);
+      console.error(err, JSON.stringify(err, null, 2));
     }
   };
+
   //function to save book to db
   const handleWishlist = async (bookId) => {
     const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
-    console.log({ bookToSave });
+    console.log(bookToSave);
 
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
@@ -125,10 +126,26 @@ const Search = () => {
 
     try {
       await saveBookToWishlist({
-        variables: { input: { ...bookToSave } },
+        variables: { input: bookToSave },
       });
-
       setSavedBookIds([...savedBookIds, bookToSave.bookId]);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleTrade = async (bookId) => {
+    console.log(bookId)
+    const token = Auth.loggedIn() ? Auth.getToken() : null;
+
+    if (!token) {
+      return false;
+    }
+
+    try {
+      await toggleTradeBool({
+        variables: { bookId },
+      });
     } catch (err) {
       console.error(err);
     }
@@ -145,21 +162,33 @@ const Search = () => {
 
         {/* SEARCH INPUT */}
         <div className="py-5">
-        <form className="flex justify-center" onSubmit={handleFormSubmit}>
-          <div className="mb-3 xl:w-96">
-            <div className="input-group relative flex gap-2 items-stretch w-full mb-4">
-              <input type="search" value={searchInput} onChange={e => setSearchInput(e.target.value)}className="form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" placeholder="Search" aria-label="Search" aria-describedby="button-addon3" />
-              <button type="submit" className="border-2 px-2 rounded border-[#6bfece] text-[#6bfece]"id="button-addon3">Search</button>
+          <form className="flex justify-center" onSubmit={handleFormSubmit}>
+            <div className="mb-3 xl:w-96">
+              <div className="input-group relative flex gap-2 items-stretch w-full mb-4">
+                <input
+                  type="search"
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  className="form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                  placeholder="Search"
+                  aria-label="Search"
+                  aria-describedby="button-addon3"
+                />
+                <button
+                  type="submit"
+                  className="border-2 px-2 rounded border-[#6bfece] text-[#6bfece]"
+                  id="button-addon3"
+                >
+                  Search
+                </button>
+              </div>
             </div>
-          </div>
-        </form>
+          </form>
 
           {/* END SEARCH INPUT */}
-
         </div>
 
         {/* LAYOUT BREAK - HORIZONTAL LINE */}
-   
       </div>
 
       {/* GOOGLE BOOKS API */}
@@ -202,9 +231,7 @@ const Search = () => {
                         {savedBookIds?.some(
                           (savedBookId) => savedBookId === book.bookId
                         ) ? (
-                          <div className="inline-flex items-center">
-                            Saved
-                          </div>
+                          <div className="inline-flex items-center">Saved</div>
                         ) : (
                           <div className="inline-flex items-center">
                             Save Book
@@ -231,17 +258,13 @@ const Search = () => {
                           </div>
                         ) : (
                           <div className="inline-flex items-center">
-
                             Add to Wishlist
                           </div>
                         )}
                       </button>
                       <button
                         className="rounded-md border border-indigo-300 bg-[#22274f] px-4 py-2 text-sm font-medium shadow-md inline-flex items-center"
-                        disabled={savedBookIds?.some(
-                          (savedBookId) => savedBookId === book.bookId
-                        )}
-                        onClick={() => handleWishlist(book.bookId)}
+                        onClick={() => handleTrade(book.bookId)}
                       >
                         {savedBookIds?.some(
                           (savedBookId) => savedBookId === book.bookId
@@ -256,7 +279,6 @@ const Search = () => {
                           </div>
                         ) : (
                           <div className="inline-flex items-center">
-
                             Available to Trade
                           </div>
                         )}
@@ -273,8 +295,6 @@ const Search = () => {
         </div>
       </div>
       {/* END GOOGLE BOOKS API */}
-
-      
     </>
   );
 };

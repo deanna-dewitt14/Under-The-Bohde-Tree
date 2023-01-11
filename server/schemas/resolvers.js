@@ -112,10 +112,38 @@ const resolvers = {
       if (context.user) {
         const updateUser = await User.findByIdAndUpdate(
           { _id: context.user._id },
-          { $push: { savedBooks: args.input } },
+          { $addToSet: { savedBooks: args.input } },
           { new: true, runValidators: true }
         );
         return updateUser;
+      }
+      throw new AuthenticationError("You need to be logged in!");
+    },
+
+    addWish: async (parent, args, context) => {
+      console.log("saveBook");
+      if (context.user) {
+        const updateUser = await User.findByIdAndUpdate(
+          { _id: context.user._id },
+          { $addToSet: { wishList: args.input } },
+          { new: true, runValidators: true }
+        );
+        return updateUser;
+      }
+      throw new AuthenticationError("You need to be logged in!");
+    },
+
+
+    removeWish: async (parent, { bookId }, context) => {
+      console.log(context.user, bookId);
+      if (context.user) {
+        const updateSavedBooks = await User.findOneAndUpdate(
+          { _id: context.user._id },
+          { $pull: { wishList: { bookId } } },
+          { new: true }
+        );
+        console.log(updateSavedBooks);
+        return updateSavedBooks;
       }
       throw new AuthenticationError("You need to be logged in!");
     },
@@ -132,15 +160,16 @@ const resolvers = {
       }
       throw new AuthenticationError("You need to be logged in!");
     },
+
     toggleTradeBool: async (parent, args, context) => {
       if (context.user) {
         const userData = await User.findOne({ _id: context.user._id })
             .select("-__v -password")
-            .populate("books"),
+            .populate("savedBooks"),
           savedBooks = userData.savedBooks,
           bookId = args.bookId,
           book = savedBooks.find((book) => book.bookId === bookId);
-
+        console.log(book)
         if (book) {
           book.tradeBool = !book.tradeBool;
           await User.updateOne(
