@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState } from "react";
 import "react-dropdown/style.css";
 import { useParams, Navigate } from "react-router-dom";
 // mongoose, auth, graphql
@@ -149,7 +149,7 @@ const Profile = () => {
         {/* LIBRARY, WISHLIST, AND WILLING TO TRADE */}
         <div className="flex gap-4 flex justify-center m-6 ">
           {/* LIBRARY */}
-          <section>
+          <section className="basis-full">
             <div className="mt-8 px-4 sm:px-6">
               <h2 className="text-4xl text-indigo-300 font-medium drop-shadow">
                 Library
@@ -160,9 +160,9 @@ const Profile = () => {
                 {" "}
                 {userData?.savedBooks?.map((book) => (
                   <>
-                    <div className="overflow-hidden bg-[#22274f] shadow sm:rounded-md">
+                    <div key={book.bookId} className="overflow-hidden bg-[#22274f] shadow sm:rounded-md">
                       <ul className="divide-y divide-gray-700">
-                        <li>
+                        <li key={book.bookId}>
                           <div className="block hover:bg-slate-800">
                             <div className="px-4 py-2 sm:px-6">
                               <div className="flex gap-2 justify-between">
@@ -206,7 +206,7 @@ const Profile = () => {
           </section>
 
           {/* WISHLIST */}
-          <section>
+          <section className="basis-full">
             <div className="mt-8 px-4 sm:px-6">
               <h2 className="text-4xl text-indigo-300 font-medium drop-shadow">
                 Wishlist
@@ -217,9 +217,9 @@ const Profile = () => {
                 {" "}
                 {userData?.wishList?.map((book) => (
                   <>
-                    <div className="overflow-hidden bg-[#22274f] shadow sm:rounded-md">
+                    <div key={book.bookId} className="overflow-hidden bg-[#22274f] shadow sm:rounded-md">
                       <ul className="divide-y divide-gray-700">
-                        <li>
+                        <li key={book.bookId}>
                           <div className="block hover:bg-slate-800">
                             <div className="px-4 py-2 sm:px-6">
                               <div className="flex gap-2 justify-between">
@@ -269,7 +269,7 @@ const Profile = () => {
           </section>
 
           {/* TRADE */}
-          <section>
+          <section className="basis-full">
             <div className="mt-8 px-4 sm:px-6">
               <h2 className="text-4xl text-indigo-300 font-medium drop-shadow z-[0]">
                 Willing to Trade
@@ -284,9 +284,9 @@ const Profile = () => {
                   })
                   .map((book) => (
                     <>
-                      <div className="overflow-hidden bg-[#22274f] shadow sm:rounded-md">
+                      <div key={book.bookId} className="overflow-hidden bg-[#22274f] shadow sm:rounded-md">
                         <ul className="divide-y divide-gray-700">
-                          <li>
+                          <li key={book.bookId}>
                             <div className="block hover:bg-slate-800">
                               <div className="px-4 py-2 sm:px-6">
                                 <div className="flex gap-2 justify-between">

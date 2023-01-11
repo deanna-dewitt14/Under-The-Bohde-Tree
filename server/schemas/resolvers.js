@@ -8,8 +8,6 @@ const resolvers = {
       if (context.user) {
         const userData = await User.findOne({ _id: context.user._id })
           .select("-__v -password")
-          .populate("friends")
-          .populate("comments");
         console.log(userData);
         return userData;
       }
@@ -19,15 +17,11 @@ const resolvers = {
     users: async () => {
       return User.find()
         .select("-__v -password")
-        .populate("friends")
-        .populate("comments");
     },
     // GET a user by username
     user: async (parent, { username }) => {
       return User.findOne({ username })
         .select("-__v -password")
-        .populate("friends")
-        .populate("comments");
     },
 
     getUserTrade: async (parent, { bookId }) => {
@@ -45,6 +39,7 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
+
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
 
@@ -59,6 +54,7 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
+
     updateUser: async (parent, { id, email }) => {
       const user = await User.findOneAndUpdate(
         { _id: id },

@@ -22,5 +22,5 @@ export default function Modal({ book, showModal, setShowModal}) {
         <div></div>
       </div>
     </div>
-  ) : <>""</> 
+  ) : null
 }
