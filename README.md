@@ -9,17 +9,11 @@ Everyone knows that meeting others with similar interest bookworms fosters creat
 - [Mock Up](#Mock-Up)
 - [Group Members](#Group-Members)
 - [Technologies Used](#Technologies-Used)
-- [API](#API's)
-- [Project Requirements](#Project-Requirements)
 - [Concept](#Concept)
-- [Presentation Requirements](#User-Story)
-- [Technical Acceptance Criteria](#Technical-Acceptance-Criteria)
 - [Deployment](#Deployment)
-- [Repository Quality](#Repository-Quality)
-- [Application Quality](#Application-Quality)
 - [Presentation](#Presentation)
-- [Collaboration](#Collaboration)
-- [Submission](#Submission)
+- [Github Repository](#Github Repository)
+
 
 ## Mock Up
 
