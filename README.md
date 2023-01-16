@@ -12,7 +12,6 @@ Everyone knows that meeting others with similar interest bookworms fosters creat
 - [Concept](#Concept)
 - [Deployment](#Deployment)
 - [Presentation](#Presentation)
-- [Github Repository](#Github Repository)
 
 
 ## Mock Up
