@@ -2,7 +2,7 @@
 
 ## Description
 
-Welcome to our project...
+Everyone knows that meeting others with similar interest bookworms fosters creativity and can provide inspiration for future ideas or books.. Under The Bohde Tree is a place where you can find other bookworms who want to share their knowledge.Under the Bohde Tree is a platform where you are able to look up books and add them to your "bookshelves". When you go into the application it will ask you to Log In or Sing Up. From there you will be taken to a search bar where you can start looking up book you want. While looking for a book you can add it to your current library to have a digital way to keep track of your books or add it to your wishlist! Once you add a few books to your profile page you will then be able to Trade with other users on the platform and contact them if they have a book on your Wishlist! Happy Reading!
 
 ## Table of Contents
 
@@ -23,7 +23,8 @@ Welcome to our project...
 
 ## Mock Up
 
-Group 3 is Awesome!!!
+![underTheBohdeTreemockup](https://user-images.githubusercontent.com/109932251/212574526-3b6dd2bb-7830-4ffc-bbbf-19872fe1c17e.png)
+
 
 ## Group Members
 
@@ -50,94 +51,28 @@ Group 3 is Awesome!!!
 - faker
 - nodemon
 
-## API's
-
--
-
-### Project Requirements
-
-- Your project should fulfill the following requirements:
-
-* Use React for the front end.
-* Use GraphQL with a Node.js and Express.js server.
-* Use MongoDB and the Mongoose ODM for the database.
-* Use queries and mutations for retrieving, adding, updating, and deleting data.
-* Be deployed using Heroku (with data).
-* Have a polished UI.
-* Be responsive.
-* Be interactive (i.e., accept and respond to user input).
-* Include authentication (using JWT).
-* Protect sensitive API key information on the server.
-* Have a clean repository that meets quality coding standards (file structure, naming conventions, best practices for class and id naming conventions, indentation, high-quality comments, etc.).
-* Have a high-quality README (with unique name, description, technologies used, screenshot, and link to deployed application).
-* Finally, you must add your project to the portfolio that you created in Module 20.
-
 # Concept
 
--
--
--
--
--
--
--
--
--
-
-### Presentation Requirements
-
-1. Elevator pitch: A one-minute description of your application.
-2. Concept: What is your user story? What was your motivation for development?
-3. Process: What were the technologies used? How were tasks and roles broken down and assigned? What challenges did you encounter? What were your successes?
-4. Demo: Show your stuff!
-5. Directions for future development.
-6. Links to the deployed application and the GitHub repository.
-
-### Technical Acceptance Criteria
-
-- Satisfies all of the acceptance criteria.
-
-*
-*
-*
-*
-*
+- Being able to Search for Books
+- Adding Books to your personal Library
+- Creating a Wishlist
+- Being able to Trade books with other users
+- Having an online platform to keep track of your physical books better
 
 ### Deployment
 
--
--
--
-
-### Repository Quality
-
-- Repository has a unique name.
-- Repository follows best practices for file structure and naming conventions.
-- Repository follows best practices for class/id naming conventions, indentation, quality comments, etc.
-- Repository contains multiple descriptive commit messages.
-- Repository contains quality readme with description, screenshot, link to deployed application.
-
-### Application Quality
-
-- Application user experience is intuitive and easy to navigate.
-- Application user interface style is clean and polished.
-- Application is responsive.
+https://under-the-bohde-tree.herokuapp.com/
 
 ### Presentation
 
-1. Your group should present using Powerpoint or a similar presentation software.
-2. Every group member should speak during the presentation.
-3. Project Presentation Template: https://docs.google.com/presentation/d/10QaO9KH8HtUXj__81ve0SZcpO5DbMbqqQr4iPpbwKks/edit#slide=id.p
-4. PowerPoint Presentation Document.
+https://docs.google.com/presentation/d/1li_kSOpdYG9Z1C48wK0a20U1pM6F7zKT/edit#slide=id.p1
 
-### Collaboration
+### Github Repository
 
-- There are no major disparities in the number of GitHub contributions between group members.
+Forked Link
+https://github.com/deanna-dewitt14/Under-The-Bohde-Tree
 
-### Submission
+Origianl Repository
+https://github.com/bslockhart/Under-The-Bohde-Tree
 
-- Date Submitted: 01/11/23
-- The URL of the deployed application: https://under-the-bohde-tree.herokuapp.com/
-- The URL of the GitHub repository that contains your code: https://github.com/bslockhart/Under-The-Bohde-Tree/tree/Brian
-- The URL of your portfolio, with your project added to it: https://github.com/bslockhart/Brians-React-Portfolio
-- PowerPoint Presentation Document: https://docs.google.com/presentation/d/1zpMDRyQgwQl6RFWtyTntWpweepLJgqp9/edit?usp=share_link&ouid=103431585642431900224&rtpof=true&sd=true
+- Date Submitted: 01/15/23
